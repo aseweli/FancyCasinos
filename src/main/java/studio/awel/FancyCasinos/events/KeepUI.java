@@ -23,7 +23,7 @@ public class KeepUI implements Listener {
             Inventory closedInventory = e.getInventory();
             Player player = (Player) e.getPlayer();
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                if (Gambling.isPlayerInGame(player)) {
+                if (player.getOpenInventory().getTitle() == null || !player.getOpenInventory().getTitle().toLowerCase().contains(Gambling.getPlayerGame(player).toLowerCase())) {
                     player.openInventory(closedInventory);
                 }
             }, 1L);

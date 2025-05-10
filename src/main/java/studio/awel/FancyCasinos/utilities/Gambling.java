@@ -9,6 +9,7 @@ public class Gambling {
 
     public static HashMap<Player, String> playerGame = new HashMap<>();
 
+
     public static void indentPlayerGame(Player player, String game){
         if (playerGame.containsKey(player)){
             playerGame.replace(player, game);
@@ -30,6 +31,8 @@ public class Gambling {
     public static String getPlayerGame(Player player){
         return playerGame.get(player);
     }
+
+
 
     public static ArrayList<Player> getAllPlayersInGame(String game){
         ArrayList<Player> players = new ArrayList<>();

@@ -149,8 +149,7 @@ public class MainGUI {
                                 user.sendMessage("Invalid amount");
                                 return null;
                             }
-                            new BlackjackGUI(user, amount, winAmount -> {
-                            }, configManager).openGUI();
+                            new BlackjackGUI(user, amount, configManager).openGUI();
                         } catch (NumberFormatException e) {
                             user.sendMessage("[Null] Invalid amount");
                         }

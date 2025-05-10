@@ -25,6 +25,7 @@ public final class FancyCasinos extends JavaPlugin {
         configManager = new ConfigManager(this.getDataFolder());
 
         registerCommands();
+        registerEvents();
         ChatUtil.INSTANCE.startTTC(this);
 
     }
