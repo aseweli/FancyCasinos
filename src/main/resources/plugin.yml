@@ -1,0 +1,4 @@
+name: XCasinos
+version: '1.0-SNAPSHOT'
+main: studio.awel.xCasinos.XCasinos
+api-version: '1.21'
