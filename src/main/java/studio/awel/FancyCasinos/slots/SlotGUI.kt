@@ -1,4 +1,4 @@
-package studio.awel.FancyCasinos.ui
+package studio.awel.FancyCasinos.slots
 
 import com.samjakob.spigui.buttons.SGButton
 import com.samjakob.spigui.item.ItemBuilder
@@ -10,7 +10,6 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.scheduler.BukkitRunnable
 import studio.awel.FancyCasinos.FancyCasinos
-import studio.awel.FancyCasinos.slots.Machine
 import studio.awel.FancyCasinos.utilities.cigan.translate
 import studio.awel.FancyCasinos.utilities.cigan.typeInChat
 

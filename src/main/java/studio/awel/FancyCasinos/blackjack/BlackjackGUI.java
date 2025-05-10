@@ -1,4 +1,4 @@
-package studio.awel.FancyCasinos.ui;
+package studio.awel.FancyCasinos.blackjack;
 
 import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
@@ -10,12 +10,9 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import studio.awel.FancyCasinos.blackjack.BlackjackGame;
-import studio.awel.FancyCasinos.blackjack.Card;
-import studio.awel.FancyCasinos.blackjack.GameResult;
-import studio.awel.FancyCasinos.blackjack.Hand;
 import studio.awel.FancyCasinos.config.ConfigManager;
 import studio.awel.FancyCasinos.utilities.ColorFormater;
+import studio.awel.FancyCasinos.utilities.Gambling;
 import studio.awel.FancyCasinos.utilities.awel.bjMath;
 
 import java.text.DecimalFormat;
@@ -30,13 +27,11 @@ public class BlackjackGUI {
     SGMenu menu;
     private final Player player;
     private final double bet;
-    private final Consumer<Double> balanceUpdater;
     private final ConfigManager config;
 
-    public BlackjackGUI(Player player, double bet, Consumer<Double> balanceUpdater, ConfigManager config) {
+    public BlackjackGUI(Player player, double bet, ConfigManager config) {
         this.player = player;
         this.bet = bet;
-        this.balanceUpdater = balanceUpdater;
         this.config = config;
         this.game = new BlackjackGame();
         this.menu = spiGUI.create(config.getConfig().blackjackMenuName().replace("{bet}", formatAmount(bet)), 5);
@@ -48,6 +43,7 @@ public class BlackjackGUI {
         game.startGame(bet);
         updateUI();
         player.openInventory(menu.getInventory());
+        Gambling.indentPlayerGame(player, "Blackjack");
     }
 
     private void setupGUI() {
@@ -55,9 +51,7 @@ public class BlackjackGUI {
         setSlot(borderSlots, menu, Material.BLACK_STAINED_GLASS_PANE, " ", "", event -> {});
 
         updatePlayerInfo();
-
         updateDealerInfo();
-
         setupActionButtons();
     }
 
@@ -313,9 +307,7 @@ public class BlackjackGUI {
             resultItem.setItemMeta(resultMeta);
 
             menu.setButton(22, new SGButton(resultItem));
-
-            balanceUpdater.accept(result.getWinAmount());
-
+            Gambling.endPlayerGame(player);
             menu.refreshInventory(player);
         }
     }

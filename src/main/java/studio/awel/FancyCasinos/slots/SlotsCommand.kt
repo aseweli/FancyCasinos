@@ -6,7 +6,6 @@ import co.aikar.commands.annotation.Default
 import co.aikar.commands.annotation.HelpCommand
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import studio.awel.FancyCasinos.ui.SlotGUI
 
 @CommandAlias("slots|slot|casinoslots|cslots")
 class SlotsCommand: BaseCommand() {

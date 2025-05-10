@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import studio.awel.FancyCasinos.FancyCasinos;
 import studio.awel.FancyCasinos.config.ConfigManager;
 import studio.awel.FancyCasinos.ui.MainGUI;
-import studio.awel.FancyCasinos.ui.MinesGUI;
+import studio.awel.FancyCasinos.mines.MinesGUI;
 import studio.awel.FancyCasinos.utilities.ColorFormater;
 
 import java.util.Random;

@@ -1,4 +1,4 @@
-package studio.awel.FancyCasinos.ui;
+package studio.awel.FancyCasinos.mines;
 
 import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import studio.awel.FancyCasinos.config.ConfigManager;
 import studio.awel.FancyCasinos.utilities.ColorFormater;
+import studio.awel.FancyCasinos.utilities.Gambling;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -76,6 +77,7 @@ public class MinesGUI {
         active = true;
         String title = manager.getConfig().minesMenuName();
         secondMenu = spiGUI.create(title + " (1.00x)", 6);
+        Gambling.indentPlayerGame(player, "Mines");
 
         int[] chains = {3, 12, 21, 30, 39, 48};
         setSlot(chains, secondMenu, Material.CHAIN, " ", "", event -> {});
@@ -150,6 +152,7 @@ public class MinesGUI {
 
                 secondMenu.refreshInventory(event.getWhoClicked());
                 active = false;
+                Gambling.endPlayerGame(player);
             }
         });
 
@@ -161,6 +164,7 @@ public class MinesGUI {
         String name = manager.getConfig().TrackerName().replace("{amount}", formatNumberShort(prize, 1));
         String lore = manager.getConfig().TrackerLore().replace("{amount}", formatNumberShort(prize, 1));
         setSlot(slots, secondMenu, manager.getConfig().TrackerItem(), name, lore, event -> {
+            Gambling.endPlayerGame(player);
             player.closeInventory();
             player.sendMessage("Would've claimed " + formatNumberShort(prize, 1) + "!");
         });

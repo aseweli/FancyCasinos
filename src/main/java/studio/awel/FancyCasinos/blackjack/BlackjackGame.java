@@ -1,5 +1,6 @@
 package studio.awel.FancyCasinos.blackjack;
 
+import studio.awel.FancyCasinos.utilities.Gambling;
 import studio.awel.FancyCasinos.utilities.awel.bjMath;
 import java.util.ArrayList;
 import java.util.List;
