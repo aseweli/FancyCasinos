@@ -13,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import studio.awel.FancyCasinos.config.ConfigManager;
 import studio.awel.FancyCasinos.utilities.ColorFormater;
 import studio.awel.FancyCasinos.utilities.Gambling;
+import studio.awel.FancyCasinos.utilities.awel.PlaySounds;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -120,6 +121,7 @@ public class MinesGUI {
 
                 updateTracker(player, prize.get());
                 updateCounter(player, mines, safe.get());
+                PlaySounds.sound(player, "click");
                 secondMenu.refreshInventory(event.getWhoClicked());
             }
         });
@@ -152,6 +154,7 @@ public class MinesGUI {
 
                 secondMenu.refreshInventory(event.getWhoClicked());
                 active = false;
+                PlaySounds.sound(player, "bomb");
                 Gambling.endPlayerGame(player);
             }
         });

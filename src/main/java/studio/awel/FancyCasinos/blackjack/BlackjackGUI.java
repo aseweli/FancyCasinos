@@ -13,6 +13,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import studio.awel.FancyCasinos.config.ConfigManager;
 import studio.awel.FancyCasinos.utilities.ColorFormater;
 import studio.awel.FancyCasinos.utilities.Gambling;
+import studio.awel.FancyCasinos.utilities.awel.PlaySounds;
 import studio.awel.FancyCasinos.utilities.awel.bjMath;
 
 import java.text.DecimalFormat;
@@ -262,36 +263,42 @@ public class BlackjackGUI {
                     resultName = config.getConfig().blackjackResultBlackjackName();
                     resultLore = config.getConfig().blackjackResultBlackjackLore()
                             .replace("{amount}", formatAmount(result.getWinAmount()));
+                    PlaySounds.sound(player, "win");
                     break;
                 case PLAYER_WIN:
                     resultMaterial = config.getConfig().blackjackResultPlayerWinItem();
                     resultName = config.getConfig().blackjackResultPlayerWinName();
                     resultLore = config.getConfig().blackjackResultPlayerWinLore()
                             .replace("{amount}", formatAmount(result.getWinAmount()));
+                    PlaySounds.sound(player, "win");
                     break;
                 case DEALER_BUST:
                     resultMaterial = config.getConfig().blackjackResultDealerBustItem();
                     resultName = config.getConfig().blackjackResultDealerBustName();
                     resultLore = config.getConfig().blackjackResultDealerBustLore()
                             .replace("{amount}", formatAmount(result.getWinAmount()));
+                    PlaySounds.sound(player, "win");
                     break;
                 case PUSH:
                     resultMaterial = config.getConfig().blackjackResultPushItem();
                     resultName = config.getConfig().blackjackResultPushName();
                     resultLore = config.getConfig().blackjackResultPushLore()
                             .replace("{amount}", formatAmount(result.getWinAmount()));
+                    PlaySounds.sound(player, "tie");
                     break;
                 case PLAYER_BUST:
                     resultMaterial = config.getConfig().blackjackResultPlayerBustItem();
                     resultName = config.getConfig().blackjackResultPlayerBustName();
                     resultLore = config.getConfig().blackjackResultPlayerBustLore()
                             .replace("{amount}", formatAmount(bet));
+                    PlaySounds.sound(player, "lose");
                     break;
                 case DEALER_WIN:
                     resultMaterial = config.getConfig().blackjackResultDealerWinItem();
                     resultName = config.getConfig().blackjackResultDealerWinName();
                     resultLore = config.getConfig().blackjackResultDealerWinLore()
                             .replace("{amount}", formatAmount(bet));
+                    PlaySounds.sound(player, "lose");
                     break;
                 default:
                     resultMaterial = Material.PAPER;
