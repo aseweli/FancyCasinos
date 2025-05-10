@@ -1,4 +1,4 @@
-package studio.awel.xCasinos.config;
+package studio.awel.FancyCasinos.config;
 
 import org.bukkit.Material;
 import space.arim.dazzleconf.annote.ConfComments;
@@ -7,7 +7,6 @@ import space.arim.dazzleconf.annote.ConfKey;
 import space.arim.dazzleconf.sorter.AnnotationBasedSorter;
 
 import java.util.List;
-import java.awt.*;
 
 public interface PrimaryConfig {
 
@@ -287,6 +286,219 @@ public interface PrimaryConfig {
     @ConfDefault.DefaultString("RED_DYE")
     Material minesFourItem();
 
+    // Blackjack
+
+    // Blackjack Menu
+    @ConfComments("Setup for the blackjack menu")
+    @ConfKey("blackjack.menu.name")
+    @AnnotationBasedSorter.Order(30)
+    @ConfDefault.DefaultString("Blackjack - Bet: {bet}")
+    String blackjackMenuName();
+
+    // Player info
+    @ConfKey("blackjack.menu.player.name")
+    @AnnotationBasedSorter.Order(31)
+    @ConfDefault.DefaultString("&a&lYour Hand: {score}")
+    String blackjackPlayerName();
+
+    @ConfKey("blackjack.menu.player.item")
+    @AnnotationBasedSorter.Order(32)
+    @ConfDefault.DefaultString("PLAYER_HEAD")
+    Material blackjackPlayerItem();
+
+    @ConfKey("blackjack.menu.player.lore")
+    @AnnotationBasedSorter.Order(33)
+    @ConfDefault.DefaultString("&7Your current bet: ${bet}</nl>&7Click cards to see details")
+    String blackjackPlayerLore();
+
+    // Dealer info
+    @ConfKey("blackjack.menu.dealer.name")
+    @AnnotationBasedSorter.Order(34)
+    @ConfDefault.DefaultString("&c&lDealer's Hand: {score}")
+    String blackjackDealerName();
+
+    @ConfKey("blackjack.menu.dealer.item")
+    @AnnotationBasedSorter.Order(35)
+    @ConfDefault.DefaultString("PIGLIN_HEAD")
+    Material blackjackDealerItem();
+
+    @ConfKey("blackjack.menu.dealer.lore")
+    @AnnotationBasedSorter.Order(36)
+    @ConfDefault.DefaultString("&7Dealer must stand on 17 or higher</nl>&7and draw on 16 or lower")
+    String blackjackDealerLore();
+
+    // Card display
+    @ConfKey("blackjack.menu.card.name")
+    @AnnotationBasedSorter.Order(37)
+    @ConfDefault.DefaultString("&f{rank} of {suit}")
+    String blackjackCardName();
+
+    @ConfKey("blackjack.menu.card.lore")
+    @AnnotationBasedSorter.Order(38)
+    @ConfDefault.DefaultString("&7Value: {value}")
+    String blackjackCardLore();
+
+    @ConfKey("blackjack.menu.card.facedown.name")
+    @AnnotationBasedSorter.Order(39)
+    @ConfDefault.DefaultString("&8Card Face Down")
+    String blackjackFacedownName();
+
+    @ConfKey("blackjack.menu.card.facedown.lore")
+    @AnnotationBasedSorter.Order(40)
+    @ConfDefault.DefaultString("&7The dealer's hole card")
+    String blackjackFacedownLore();
+
+    // Button texts
+    @ConfKey("blackjack.menu.buttons.hit.name")
+    @AnnotationBasedSorter.Order(41)
+    @ConfDefault.DefaultString("&a&lHIT")
+    String blackjackHitName();
+
+    @ConfKey("blackjack.menu.buttons.hit.item")
+    @AnnotationBasedSorter.Order(42)
+    @ConfDefault.DefaultString("GREEN_CANDLE")
+    Material blackjackHitItem();
+
+    @ConfKey("blackjack.menu.buttons.hit.lore")
+    @AnnotationBasedSorter.Order(43)
+    @ConfDefault.DefaultString("&7Click to draw another card")
+    String blackjackHitLore();
+
+    @ConfKey("blackjack.menu.buttons.stand.name")
+    @AnnotationBasedSorter.Order(44)
+    @ConfDefault.DefaultString("&c&lSTAND")
+    String blackjackStandName();
+
+    @ConfKey("blackjack.menu.buttons.stand.item")
+    @AnnotationBasedSorter.Order(45)
+    @ConfDefault.DefaultString("RED_CANDLE")
+    Material blackjackStandItem();
+
+    @ConfKey("blackjack.menu.buttons.stand.lore")
+    @AnnotationBasedSorter.Order(46)
+    @ConfDefault.DefaultString("&7Click to stand with your current hand")
+    String blackjackStandLore();
+
+    @ConfKey("blackjack.menu.buttons.info.name")
+    @AnnotationBasedSorter.Order(47)
+    @ConfDefault.DefaultString("&b&lINFO")
+    String blackjackInfoName();
+
+    @ConfKey("blackjack.menu.buttons.info.item")
+    @AnnotationBasedSorter.Order(48)
+    @ConfDefault.DefaultString("OAK_SIGN")
+    Material blackjackInfoItem();
+
+    @ConfKey("blackjack.menu.buttons.info.lore")
+    @AnnotationBasedSorter.Order(49)
+    @ConfDefault.DefaultString("&7Blackjack pays 3:2</nl>&7Dealer stands on 17")
+    String blackjackInfoLore();
+
+    @ConfKey("blackjack.menu.buttons.playagain.name")
+    @AnnotationBasedSorter.Order(50)
+    @ConfDefault.DefaultString("&a&lPLAY AGAIN")
+    String blackjackPlayAgainName();
+
+    @ConfKey("blackjack.menu.buttons.playagain.item")
+    @AnnotationBasedSorter.Order(51)
+    @ConfDefault.DefaultString("EMERALD_BLOCK")
+    Material blackjackPlayAgainItem();
+
+    @ConfKey("blackjack.menu.buttons.playagain.lore")
+    @AnnotationBasedSorter.Order(52)
+    @ConfDefault.DefaultString("&7Click to play another round")
+    String blackjackPlayAgainLore();
+
+    // Results
+    @ConfKey("blackjack.menu.results.blackjack.name")
+    @AnnotationBasedSorter.Order(53)
+    @ConfDefault.DefaultString("&a&lBLACKJACK!")
+    String blackjackResultBlackjackName();
+
+    @ConfKey("blackjack.menu.results.blackjack.item")
+    @AnnotationBasedSorter.Order(54)
+    @ConfDefault.DefaultString("DIAMOND")
+    Material blackjackResultBlackjackItem();
+
+    @ConfKey("blackjack.menu.results.blackjack.lore")
+    @AnnotationBasedSorter.Order(55)
+    @ConfDefault.DefaultString("&aYou win ${amount}")
+    String blackjackResultBlackjackLore();
+
+    @ConfKey("blackjack.menu.results.player-win.name")
+    @AnnotationBasedSorter.Order(56)
+    @ConfDefault.DefaultString("&a&lYOU WIN!")
+    String blackjackResultPlayerWinName();
+
+    @ConfKey("blackjack.menu.results.player-win.item")
+    @AnnotationBasedSorter.Order(57)
+    @ConfDefault.DefaultString("EMERALD")
+    Material blackjackResultPlayerWinItem();
+
+    @ConfKey("blackjack.menu.results.player-win.lore")
+    @AnnotationBasedSorter.Order(58)
+    @ConfDefault.DefaultString("&aYou win ${amount}")
+    String blackjackResultPlayerWinLore();
+
+    @ConfKey("blackjack.menu.results.dealer-bust.name")
+    @AnnotationBasedSorter.Order(59)
+    @ConfDefault.DefaultString("&a&lDEALER BUST!")
+    String blackjackResultDealerBustName();
+
+    @ConfKey("blackjack.menu.results.dealer-bust.item")
+    @AnnotationBasedSorter.Order(60)
+    @ConfDefault.DefaultString("EMERALD")
+    Material blackjackResultDealerBustItem();
+
+    @ConfKey("blackjack.menu.results.dealer-bust.lore")
+    @AnnotationBasedSorter.Order(61)
+    @ConfDefault.DefaultString("&aYou win ${amount}")
+    String blackjackResultDealerBustLore();
+
+    @ConfKey("blackjack.menu.results.push.name")
+    @AnnotationBasedSorter.Order(62)
+    @ConfDefault.DefaultString("&e&lPUSH!")
+    String blackjackResultPushName();
+
+    @ConfKey("blackjack.menu.results.push.item")
+    @AnnotationBasedSorter.Order(63)
+    @ConfDefault.DefaultString("GOLD_INGOT")
+    Material blackjackResultPushItem();
+
+    @ConfKey("blackjack.menu.results.push.lore")
+    @AnnotationBasedSorter.Order(64)
+    @ConfDefault.DefaultString("&eYour bet of ${amount} has been returned")
+    String blackjackResultPushLore();
+
+    @ConfKey("blackjack.menu.results.player-bust.name")
+    @AnnotationBasedSorter.Order(65)
+    @ConfDefault.DefaultString("&c&lBUST!")
+    String blackjackResultPlayerBustName();
+
+    @ConfKey("blackjack.menu.results.player-bust.item")
+    @AnnotationBasedSorter.Order(66)
+    @ConfDefault.DefaultString("REDSTONE")
+    Material blackjackResultPlayerBustItem();
+
+    @ConfKey("blackjack.menu.results.player-bust.lore")
+    @AnnotationBasedSorter.Order(67)
+    @ConfDefault.DefaultString("&cYou lost ${amount}")
+    String blackjackResultPlayerBustLore();
+
+    @ConfKey("blackjack.menu.results.dealer-win.name")
+    @AnnotationBasedSorter.Order(68)
+    @ConfDefault.DefaultString("&c&lDEALER WINS!")
+    String blackjackResultDealerWinName();
+
+    @ConfKey("blackjack.menu.results.dealer-win.item")
+    @AnnotationBasedSorter.Order(69)
+    @ConfDefault.DefaultString("REDSTONE")
+    Material blackjackResultDealerWinItem();
+
+    @ConfKey("blackjack.menu.results.dealer-win.lore")
+    @AnnotationBasedSorter.Order(70)
+    @ConfDefault.DefaultString("&cYou lost ${amount}")
+    String blackjackResultDealerWinLore();
 
 
 

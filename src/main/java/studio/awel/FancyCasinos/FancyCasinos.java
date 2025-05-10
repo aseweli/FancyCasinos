@@ -1,18 +1,14 @@
-package studio.awel.xCasinos;
+package studio.awel.FancyCasinos;
 
-import co.aikar.commands.BaseCommand;
 import co.aikar.commands.BukkitCommandManager;
-import co.aikar.commands.PaperCommandManager;
 import com.samjakob.spigui.SpiGUI;
-import com.samjakob.spigui.menu.SGMenu;
 import org.bukkit.plugin.java.JavaPlugin;
-import studio.awel.xCasinos.commands.devCommand;
-import studio.awel.xCasinos.config.ConfigManager;
-import studio.awel.xCasinos.slots.SlotsCommand;
-import studio.awel.xCasinos.utilities.cigan.ChatUtil;
-import studio.awel.xCasinos.utilities.cigan.Logger;
+import studio.awel.FancyCasinos.commands.devCommand;
+import studio.awel.FancyCasinos.config.ConfigManager;
+import studio.awel.FancyCasinos.slots.SlotsCommand;
+import studio.awel.FancyCasinos.utilities.cigan.ChatUtil;
 
-public final class XCasinos extends JavaPlugin {
+public final class FancyCasinos extends JavaPlugin {
 
     BukkitCommandManager commandManager;
     public static SpiGUI spiGUI;
@@ -23,6 +19,7 @@ public final class XCasinos extends JavaPlugin {
         saveDefaultConfig();
         reloadConfig();
         commandManager = new BukkitCommandManager(this);
+
         spiGUI = new SpiGUI(this);
 
         configManager = new ConfigManager(this.getDataFolder());

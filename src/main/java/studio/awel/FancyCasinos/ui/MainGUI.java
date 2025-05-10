@@ -1,33 +1,33 @@
-package studio.awel.xCasinos.ui;
+package studio.awel.FancyCasinos.ui;
 
 import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
-import studio.awel.xCasinos.config.ConfigManager;
-import studio.awel.xCasinos.utilities.ColorFormater;
-import studio.awel.xCasinos.utilities.CustomItem;
-import studio.awel.xCasinos.utilities.cigan.ChatUtil;
-import studio.awel.xCasinos.utilities.cigan.ChatUtilKt;
+import studio.awel.FancyCasinos.FancyCasinos;
+import studio.awel.FancyCasinos.config.ConfigManager;
+import studio.awel.FancyCasinos.utilities.ColorFormater;
+import studio.awel.FancyCasinos.utilities.CustomItem;
+import studio.awel.FancyCasinos.utilities.cigan.ChatUtilKt;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static studio.awel.xCasinos.XCasinos.spiGUI;
+import static studio.awel.FancyCasinos.FancyCasinos.spiGUI;
 
 public class MainGUI {
 
     ConfigManager configManager;
+    FancyCasinos fancyCasinos;
     private final static Logger logger = Logger.getLogger("XCasino Menu Manager");
     SGMenu menu;
 
-    public MainGUI(ConfigManager configManager) {
+    public MainGUI(ConfigManager configManager, FancyCasinos fancyCasinos) {
         this.configManager = configManager;
+        this.fancyCasinos = fancyCasinos;
     }
 
     public void openGUI(Player player){
@@ -138,6 +138,27 @@ public class MainGUI {
                 case 'x':
                     user.closeInventory();
                     break;
+                case 'b':
+                    user.closeInventory();
+                    ChatUtilKt.typeInChat(user, "Blackjack bet", 15L, (String found) -> {
+                        try {
+                            double amount = Double.parseDouble(found);
+                            if (amount < 1) {
+                                user.sendMessage("Invalid amount");
+                                return null;
+                            }
+                            new BlackjackGUI(user, amount, winAmount -> {
+                            }, configManager).openGUI();
+                        } catch (NumberFormatException e) {
+                            user.sendMessage("[Null] Invalid amount");
+                        }
+                        return null;
+                    }, () -> {
+                        user.sendMessage("Ran out of time buddy!");
+                        return null;
+                    });
+                    break;
+
                 case 'm':
                     user.closeInventory();
                     ChatUtilKt.typeInChat(user, "Mines bet", 15L, (String found) -> {

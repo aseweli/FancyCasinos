@@ -1,4 +1,4 @@
-package studio.awel.xCasinos.utilities;
+package studio.awel.FancyCasinos.utilities;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;

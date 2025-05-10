@@ -1,53 +1,51 @@
-package studio.awel.FancyCasinos.utilities.awel;
+package studio.awel.FancyCasinos.blackjack;
 
-import studio.awel.FancyCasinos.blackjack.Card;
-
+import studio.awel.FancyCasinos.utilities.awel.bjMath;
 import java.util.ArrayList;
 import java.util.List;
 
-import studio.awel.FancyCasinos.blackjack.Deck;
-import studio.awel.FancyCasinos.blackjack.GameResult;
-import studio.awel.FancyCasinos.blackjack.Hand;
-
-public class bjMath {
+public class BlackjackGame {
 
     /**
-     * This class was not written by me, it was copied
+     * !! Not my code !!
+     * Did edit some parts by myself.
      */
 
 
-    public enum ResultType {
-        PLAYER_BLACKJACK,
-        PLAYER_WIN,
-        DEALER_WIN,
-        PUSH,
-        PLAYER_BUST,
-        DEALER_BUST
-    }
-
-    private final Deck deck;
-    private final Hand playerHand;
-    private final Hand dealerHand;
+    private Deck deck;
+    private Hand playerHand;
+    private Hand dealerHand;
     private double bet;
     private boolean gameEnded = false;
 
-    public bjMath() {
+    public BlackjackGame() {
         deck = new Deck();
         playerHand = new Hand();
         dealerHand = new Hand();
     }
 
-    public void startGame(double betAmount) {
-        playerHand.getCards().clear();
-        dealerHand.getCards().clear();
-
-        this.bet = betAmount;
+    public void startGame(double bet) {
+        this.bet = bet;
         this.gameEnded = false;
 
+        // Make sure you initialize hands before using them
+        this.playerHand = new Hand();
+        this.dealerHand = new Hand();
+
+        // Create and shuffle a new deck
+        this.deck = new Deck();
+        deck.shuffle();
+
+        // Deal initial cards - using dealCard() instead of drawCard()
         playerHand.addCard(deck.dealCard());
         dealerHand.addCard(deck.dealCard());
         playerHand.addCard(deck.dealCard());
         dealerHand.addCard(deck.dealCard());
+
+        // Check for blackjack
+        if (playerHand.isBlackjack() || dealerHand.isBlackjack()) {
+            gameEnded = true;
+        }
     }
 
     public Card playerHit() {
@@ -67,7 +65,6 @@ public class bjMath {
         if (gameEnded) return new ArrayList<>();
 
         List<Card> dealtCards = new ArrayList<>();
-
         while (dealerHand.getValue() < 17) {
             Card card = deck.dealCard();
             dealerHand.addCard(card);
@@ -84,27 +81,26 @@ public class bjMath {
         }
 
         if (playerHand.isBlackjack() && !dealerHand.isBlackjack()) {
-
-            return new GameResult(ResultType.PLAYER_BLACKJACK, bet * 1.5);
+            return new GameResult(bjMath.ResultType.PLAYER_BLACKJACK, bet * 1.5);
         }
 
         if (playerHand.isBusted()) {
-            return new GameResult(ResultType.PLAYER_BUST, 0);
+            return new GameResult(bjMath.ResultType.PLAYER_BUST, 0);
         }
 
         if (dealerHand.isBusted()) {
-            return new GameResult(ResultType.DEALER_BUST, bet);
+            return new GameResult(bjMath.ResultType.DEALER_BUST, bet);
         }
 
         int playerValue = playerHand.getValue();
         int dealerValue = dealerHand.getValue();
 
         if (playerValue > dealerValue) {
-            return new GameResult(ResultType.PLAYER_WIN, bet);
+            return new GameResult(bjMath.ResultType.PLAYER_WIN, bet);
         } else if (playerValue < dealerValue) {
-            return new GameResult(ResultType.DEALER_WIN, 0);
+            return new GameResult(bjMath.ResultType.DEALER_WIN, 0);
         } else {
-            return new GameResult(ResultType.PUSH, bet);
+            return new GameResult(bjMath.ResultType.PUSH, bet); // Tie, return the bet
         }
     }
 
@@ -131,14 +127,6 @@ public class bjMath {
         return dealerHand;
     }
 
-    public double getBet() {
-        return bet;
-    }
-
-    public boolean isGameEnded() {
-        return gameEnded;
-    }
-
     public Card getVisibleDealerCard() {
         if (dealerHand.getCards().isEmpty()) {
             return null;
@@ -146,14 +134,11 @@ public class bjMath {
         return dealerHand.getCards().get(0);
     }
 
-    public String getFormattedAmount(double amount) {
-        if (amount >= 1000000000) {
-            return String.format("%.1fb", amount / 1000000000);
-        } else if (amount >= 1000000) {
-            return String.format("%.1fm", amount / 1000000);
-        } else if (amount >= 1000) {
-            return String.format("%.1fk", amount / 1000);
-        }
-        return String.format("%.2f", amount);
+    public double getBet() {
+        return bet;
+    }
+
+    public boolean isGameEnded() {
+        return gameEnded;
     }
 }

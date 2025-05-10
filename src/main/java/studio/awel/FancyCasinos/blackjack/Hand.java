@@ -1,16 +1,26 @@
-package studio.awel.xCasinos.blackjack;
+package studio.awel.FancyCasinos.blackjack;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Hand {
-    private final List<Card> cards = new ArrayList<>();
+    private final List<Card> cards;
+
+    public Hand() {
+        this.cards = new ArrayList<>();
+    }
 
     public void addCard(Card card) {
-        cards.add(card);
+        if (card != null) {
+            cards.add(card);
+        }
     }
 
     public List<Card> getCards() {
+        if (cards == null) {
+            return Collections.emptyList();
+        }
         return new ArrayList<>(cards);
     }
 
@@ -45,11 +55,8 @@ public class Hand {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (Card card : cards) {
-            sb.append(card.toString()).append(", ");
+            sb.append(card.toString()).append(" ");
         }
-        if (sb.length() > 0) {
-            sb.setLength(sb.length() - 2);
-        }
-        return sb.toString();
+        return sb.toString().trim();
     }
 }

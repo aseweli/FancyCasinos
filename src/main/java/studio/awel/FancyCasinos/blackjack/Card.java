@@ -1,4 +1,4 @@
-package studio.awel.xCasinos.blackjack;
+package studio.awel.FancyCasinos.blackjack;
 
 public class Card {
     private final String suit;

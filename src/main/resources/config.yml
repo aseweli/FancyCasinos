@@ -1,0 +1,6 @@
+sounds:
+  win:
+    - "ENTITY_PLAYER_LEVELUP:0"
+    - "BLOCK_NOTE_BLOCK_PLING:5"
+  lose:
+    - "ENTITY_VILLAGER_NO:0"

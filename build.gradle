@@ -1,6 +1,9 @@
 plugins {
     id 'java'
+    id 'com.gradleup.shadow' version '8.3.0'
     id("xyz.jpenilla.run-paper") version "2.3.1"
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'org.jetbrains.kotlin.jvm'
 }
 
 group = 'studio.awel'
@@ -16,11 +19,35 @@ repositories {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
+    maven {
+        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
+    maven {
+        url 'https://jitpack.io'
+    }
+    maven { url = "https://repo.aikar.co/content/groups/aikar/" }
 }
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT")
+    implementation 'com.samjakob:SpiGUI:1.4.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4'
+    compileOnly 'me.clip:placeholderapi:2.11.5'
+    compileOnly "com.github.MilkBowl:VaultAPI:1.7"
+    implementation "co.aikar:acf-paper:0.5.1-SNAPSHOT"
+    implementation "org.yaml:snakeyaml:1.28"
+    implementation 'space.arim.dazzleconf:dazzleconf-core:1.2.1'
+    implementation 'space.arim.dazzleconf:dazzleconf-ext-snakeyaml:1.2.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
 }
+
+shadowJar {
+    relocate 'org.yaml.snakeyaml', 'studio.awel.xCasinos.shaded.snakeyaml'
+    relocate"space.arim.dazzleconf", "studio.awel.xCasinos.libs.dazzleconf"
+    archiveClassifier.set('')
+}
+build.dependsOn(shadowJar)
 
 tasks {
     runServer {
@@ -34,8 +61,6 @@ tasks {
 def targetJavaVersion = 21
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
@@ -56,4 +81,11 @@ processResources {
     filesMatching('plugin.yml') {
         expand props
     }
+}
+
+artifacts {
+    archives shadowJar
+}
+kotlin {
+    jvmToolchain(21)
 }

@@ -1,4 +1,4 @@
-package studio.awel.xCasinos.blackjack;
+package studio.awel.FancyCasinos.blackjack;
 
 import java.util.ArrayList;
 import java.util.Collections;

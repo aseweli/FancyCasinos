@@ -1,6 +1,6 @@
-package studio.awel.xCasinos.blackjack;
+package studio.awel.FancyCasinos.blackjack;
 
-import studio.awel.xCasinos.utilities.awel.bjMath;
+import studio.awel.FancyCasinos.utilities.awel.bjMath;
 
 public class GameResult {
     private final bjMath.ResultType result;

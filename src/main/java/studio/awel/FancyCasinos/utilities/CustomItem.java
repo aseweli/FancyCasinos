@@ -1,4 +1,4 @@
-package studio.awel.xCasinos.utilities;
+package studio.awel.FancyCasinos.utilities;
 
 import org.bukkit.Material;
 

@@ -1,4 +1,8 @@
-name: XCasinos
+name: FancyCasino
 version: '1.0-SNAPSHOT'
-main: studio.awel.xCasinos.XCasinos
+main: studio.awel.FancyCasinos.FancyCasinos
+authors:
+  - awel
+  - snowyjs
+  - qeid
 api-version: '1.21'

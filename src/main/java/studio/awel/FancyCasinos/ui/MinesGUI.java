@@ -1,4 +1,4 @@
-package studio.awel.xCasinos.ui;
+package studio.awel.FancyCasinos.ui;
 
 import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
@@ -10,8 +10,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import studio.awel.xCasinos.config.ConfigManager;
-import studio.awel.xCasinos.utilities.ColorFormater;
+import studio.awel.FancyCasinos.config.ConfigManager;
+import studio.awel.FancyCasinos.utilities.ColorFormater;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static studio.awel.xCasinos.XCasinos.spiGUI;
+import static studio.awel.FancyCasinos.FancyCasinos.spiGUI;
 
 public class MinesGUI {
 
@@ -75,7 +75,7 @@ public class MinesGUI {
         Bukkit.broadcastMessage("Starting mine for player" + player + " with $" + amount + " on the line" + " playing with " + mines + " bombs!");
         active = true;
         String title = manager.getConfig().minesMenuName();
-        secondMenu = spiGUI.create(title, 6);
+        secondMenu = spiGUI.create(title + " (1.00x)", 6);
 
         int[] chains = {3, 12, 21, 30, 39, 48};
         setSlot(chains, secondMenu, Material.CHAIN, " ", "", event -> {});
@@ -86,8 +86,10 @@ public class MinesGUI {
         int[] glass = {49, 50, 51, 52, 53};
         setSlot(glass, secondMenu, Material.LIME_STAINED_GLASS_PANE, " ", "", event -> {});
 
+        AtomicReference<Double> mx = new AtomicReference<>((double) 0);
+
         AtomicReference<Double> prize = new AtomicReference<>((double) 0);
-        AtomicInteger safe = new AtomicInteger(16 - mines);
+        AtomicInteger safe = new AtomicInteger(25 - mines);
         updateTracker(player, prize.get());
         updateInformation(player);
         updateCounter(player, mines, safe.get());
@@ -101,13 +103,19 @@ public class MinesGUI {
         setSlot(safeSlots, secondMenu, Material.CREEPER_HEAD, "&7&oClick to mine!", "", event -> {
             if (active) {
                 int x = event.getSlot();
+                mx.getAndSet(mx.get() + 1);
                 ItemStack newItem = new ItemStack(Material.GOLD_NUGGET);
                 ItemMeta newItemMeta = newItem.getItemMeta();
                 newItemMeta.setDisplayName(ColorFormater.c("&6+$" + formatNumberShort(amount * (multi - 1), 1)));
+                secondMenu.setName(String.format("%s (%.2fx)", title, (((multi - 1) * mx.get()) + 1)));
                 prize.updateAndGet(v -> (v + amount * (multi - 1)));
                 safe.getAndDecrement();
                 newItem.setItemMeta(newItemMeta);
-                secondMenu.getButton(x).setIcon(newItem);
+
+                SGButton newButton = new SGButton(newItem);
+                newButton.withListener(e -> {});
+                secondMenu.setButton(x, newButton);
+
                 updateTracker(player, prize.get());
                 updateCounter(player, mines, safe.get());
                 secondMenu.refreshInventory(event.getWhoClicked());
@@ -117,7 +125,6 @@ public class MinesGUI {
         setSlot(bombs, secondMenu, Material.CREEPER_HEAD, "&7&oClick to mine!", "", event -> {
             if (active) {
                 int x = event.getSlot();
-                // Change the bomb icon first
                 ItemStack newItem = new ItemStack(Material.TNT);
                 ItemMeta newItemMeta = newItem.getItemMeta();
                 newItemMeta.setDisplayName(ColorFormater.c("&c&oExplosion!"));
@@ -125,7 +132,6 @@ public class MinesGUI {
                 updateTracker(player, prize.get());
                 secondMenu.getButton(x).setIcon(newItem);
 
-                // Mark other slots as losses
                 for (int slot : slots) {
                     if (slot != x && !bombSet.contains(slot)) {
                         ItemStack lostItem = new ItemStack(Material.COBWEB);
@@ -134,7 +140,6 @@ public class MinesGUI {
                         lostItem.setItemMeta(lostItemMeta);
                         secondMenu.getButton(slot).setIcon(lostItem);
                     } else if (slot != x && bombSet.contains(slot)) {
-                        // Show other bombs
                         ItemStack bombItem = new ItemStack(Material.TNT);
                         ItemMeta bombItemMeta = bombItem.getItemMeta();
                         bombItemMeta.setDisplayName(ColorFormater.c("&c&oBomb!"));
@@ -143,7 +148,6 @@ public class MinesGUI {
                     }
                 }
 
-                // Refresh once after all changes
                 secondMenu.refreshInventory(event.getWhoClicked());
                 active = false;
             }

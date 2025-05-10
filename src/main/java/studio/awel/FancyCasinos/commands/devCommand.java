@@ -1,17 +1,16 @@
-package studio.awel.xCasinos.commands;
+package studio.awel.FancyCasinos.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
-import com.sun.tools.javac.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import studio.awel.xCasinos.config.ConfigManager;
-import studio.awel.xCasinos.ui.MainGUI;
-import studio.awel.xCasinos.ui.MinesGUI;
-import studio.awel.xCasinos.utilities.ColorFormater;
+import studio.awel.FancyCasinos.FancyCasinos;
+import studio.awel.FancyCasinos.config.ConfigManager;
+import studio.awel.FancyCasinos.ui.MainGUI;
+import studio.awel.FancyCasinos.ui.MinesGUI;
+import studio.awel.FancyCasinos.utilities.ColorFormater;
 
 import java.util.Random;
 
@@ -30,7 +29,7 @@ public class devCommand extends BaseCommand {
         if (args.length == 0) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
-                MainGUI t = new MainGUI(tx);
+                MainGUI t = new MainGUI(tx, FancyCasinos.getPlugin(FancyCasinos.class));
                 t.openGUI(player);
             }
         } else {
