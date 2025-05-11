@@ -3,7 +3,7 @@ package studio.awel.FancyCasinos;
 import co.aikar.commands.BukkitCommandManager;
 import com.samjakob.spigui.SpiGUI;
 import org.bukkit.plugin.java.JavaPlugin;
-import studio.awel.FancyCasinos.commands.devCommand;
+import studio.awel.FancyCasinos.commands.CasinoCommand;
 import studio.awel.FancyCasinos.config.ConfigManager;
 import studio.awel.FancyCasinos.events.KeepUI;
 import studio.awel.FancyCasinos.slots.SlotsCommand;
@@ -39,7 +39,7 @@ public final class FancyCasinos extends JavaPlugin {
     }
 
     public void registerCommands(){
-        commandManager.registerCommand(new devCommand(configManager));
+         commandManager.registerCommand(new CasinoCommand(configManager));
         commandManager.registerCommand(new SlotsCommand());
 
     }

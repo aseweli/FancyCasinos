@@ -29,8 +29,6 @@ import static studio.awel.FancyCasinos.FancyCasinos.spiGUI;
 public class MainGUI {
     private static final Logger LOGGER = Logger.getLogger("FancyCasinos Menu Manager");
     private static final double MIN_BET_AMOUNT = 1.0;
-    private static final String INVALID_AMOUNT_MSG = "Invalid amount";
-    private static final String TIMEOUT_MSG = "Ran out of time buddy!";
     private static final int MAX_ROWS = 6;
     private static final int MIN_ROWS = 1;
 
@@ -105,12 +103,20 @@ public class MainGUI {
                 player.closeInventory();
                 break;
             case 'b':
-                handleGameBet(player, "Blackjack bet", amount ->
-                        new BlackjackGUI(player, amount, configManager).openGUI());
+                if (player.hasPermission("fancycasinos.blackjack")) {
+                    handleGameBet(player, "Blackjack bet", amount ->
+                            new BlackjackGUI(player, amount, configManager).openGUI());
+                } else {
+                    player.sendMessage(ColorFormater.c(configManager.getConfig().permissionDeniedMessage()));
+                }
                 break;
             case 'm':
-                handleGameBet(player, "Mines bet", amount ->
-                        new MinesGUI(configManager).openGUI(player, amount));
+                if (player.hasPermission("fancycasinos.mines")) {
+                    handleGameBet(player, "Mines bet", amount ->
+                            new MinesGUI(configManager).openGUI(player, amount));
+                } else {
+                    player.sendMessage(ColorFormater.c(configManager.getConfig().permissionDeniedMessage()));
+                }
                 break;
         }
     }
@@ -122,15 +128,20 @@ public class MainGUI {
                     try {
                         double amount = Double.parseDouble(input);
                         if (amount < MIN_BET_AMOUNT) {
-                            player.sendMessage(INVALID_AMOUNT_MSG);
+                            String[] message = ColorFormater.c(configManager.getConfig().invalidValueMessage()).split("</nl>");
+                            player.sendTitle(message[0], message[1], 10, 70, 20);
                             return;
                         }
                         gameStarter.accept(amount);
                     } catch (NumberFormatException e) {
-                        player.sendMessage("[Null] " + INVALID_AMOUNT_MSG);
+                        String[] message = ColorFormater.c(configManager.getConfig().invalidValueMessage()).split("</nl>");
+                        player.sendTitle(message[0], message[1], 10, 70, 20);
                     }
                 },
-                () -> player.sendMessage(TIMEOUT_MSG)
+                () -> {
+                    String[] message = ColorFormater.c(configManager.getConfig().betTimeoutMessage()).split("</nl>");
+                    player.sendTitle(message[0], message[1], 10, 70, 20);
+                }
         );
     }
 

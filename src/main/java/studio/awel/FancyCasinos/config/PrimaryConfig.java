@@ -497,4 +497,36 @@ public interface PrimaryConfig {
     @AnnotationBasedSorter.Order(70)
     @ConfDefault.DefaultString("&f<#ff5555>❙ &fDealer has a better hand! You lost <#ff5555>${amount}&f</nl>&f<#ff5555>❙ &fThe house always wins... eventually!")
     String blackjackResultDealerWinLore();
+
+    // Command Messages
+    @ConfComments("Messages related to the /casino command")
+    @ConfKey("messages.command.permission-denied")
+    @AnnotationBasedSorter.Order(100)
+    @ConfDefault.DefaultString("&c&lPermission Denied! &fYou don't have permission to use this command.")
+    String permissionDeniedMessage();
+
+    @ConfKey("messages.command.invalid-value")
+    @AnnotationBasedSorter.Order(101)
+    @ConfDefault.DefaultString("&c&lInvalid Value! </nl>&fThe amount you entered is invalid. Valid ex: 1, 10k, 100m")
+    String invalidValueMessage();
+
+    @ConfKey("messages.command.reload-time")
+    @AnnotationBasedSorter.Order(103)
+    @ConfDefault.DefaultString("&a&lReloaded in &f{ms}ms&a!")
+    String reloadTimeMessage();
+
+    @ConfKey("messages.command.help")
+    @AnnotationBasedSorter.Order(103)
+    @ConfDefault.DefaultString("&6&lFancy Casinos Commands&f:</nl>&f/casino - &7Open the main casino menu</nl>&f/casino reload - &7Reload the plugin configuration</nl>&f/casino help - &7Display this help message")
+    String helpMessage();
+
+    @ConfKey("messages.general.bet-timeout")
+    @AnnotationBasedSorter.Order(104)
+    @ConfDefault.DefaultString("&c&lTime's Up! </nl>&fYou took too long to place your bet.")
+    String betTimeoutMessage();
+
+    @ConfKey("messages.general.insufficient-funds")
+    @AnnotationBasedSorter.Order(105)
+    @ConfDefault.DefaultString("&c&lInsufficient Funds! </nl>&fYou don't have enough money to place this bet.")
+    String insufficientFundsMessage();
 }
