@@ -12,7 +12,6 @@ import java.util.Random;
 import java.util.function.Consumer;
 
 public class CrashGame {
-
     private enum GameState {
         WAITING, RUNNING, CRASHED
     }

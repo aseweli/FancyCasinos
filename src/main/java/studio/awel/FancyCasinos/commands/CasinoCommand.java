@@ -9,6 +9,9 @@ import studio.awel.FancyCasinos.config.ConfigManager;
 import studio.awel.FancyCasinos.ui.MainGUI;
 import studio.awel.FancyCasinos.utilities.ColorFormater;
 
+
+@CommandAlias("casino")
+@CommandPermission("fancycasinos.use")
 public class CasinoCommand extends BaseCommand {
 
 
@@ -19,8 +22,6 @@ public class CasinoCommand extends BaseCommand {
     }
 
     @Default
-    @CommandAlias("casino")
-    @CommandPermission("fancycasinos.use")
     public void casinoCommand(CommandSender sender) {
         if (sender instanceof Player) {
             MainGUI menu = new MainGUI(configManager, FancyCasinos.getPlugin(FancyCasinos.class));
@@ -44,6 +45,6 @@ public class CasinoCommand extends BaseCommand {
 
     @HelpCommand
     public void helpCommand(CommandSender sender) {
-        sender.sendMessage(ColorFormater.c(configManager.getConfig().helpMessage()));
+        sender.sendMessage(ColorFormater.c(configManager.getConfig().helpMessage().replace("</nl>", "\n")));
     }
 }

@@ -498,35 +498,332 @@ public interface PrimaryConfig {
     @ConfDefault.DefaultString("&f<#ff5555>❙ &fDealer has a better hand! You lost <#ff5555>${amount}&f</nl>&f<#ff5555>❙ &fThe house always wins... eventually!")
     String blackjackResultDealerWinLore();
 
+    // Crash Game Settings
+    @ConfComments("Core settings for the crash game")
+    @ConfKey("crash.settings.betPeriodSeconds")
+    @AnnotationBasedSorter.Order(80)
+    @ConfDefault.DefaultInteger(15)
+    int crashBetPeriodSeconds();
+
+    @ConfKey("crash.settings.minimumPlayers")
+    @AnnotationBasedSorter.Order(81)
+    @ConfDefault.DefaultInteger(1)
+    int crashMinimumPlayers();
+
+    @ConfKey("crash.settings.minBetAmount")
+    @AnnotationBasedSorter.Order(82)
+    @ConfDefault.DefaultDouble(10.0)
+    double crashMinBetAmount();
+
+    // Crash Menu
+    @ConfKey("crash.menu.title")
+    @AnnotationBasedSorter.Order(83)
+    @ConfDefault.DefaultString("<#5555ff>ᴄʀᴀꜱʜ ɢᴀᴍᴇ")
+    String crashTitle();
+
+    // Materials
+    @ConfKey("crash.items.blankObject")
+    @AnnotationBasedSorter.Order(84)
+    @ConfDefault.DefaultString("BLACK_STAINED_GLASS_PANE")
+    Material crashBlankObject();
+
+    @ConfKey("crash.items.infoItem")
+    @AnnotationBasedSorter.Order(85)
+    @ConfDefault.DefaultString("COMPASS")
+    Material crashInfoItem();
+
+    @ConfKey("crash.items.runningItem")
+    @AnnotationBasedSorter.Order(86)
+    @ConfDefault.DefaultString("EMERALD")
+    Material crashRunningItem();
+
+    @ConfKey("crash.items.crashedItem")
+    @AnnotationBasedSorter.Order(87)
+    @ConfDefault.DefaultString("REDSTONE")
+    Material crashCrashedItem();
+
+    @ConfKey("crash.items.betItem")
+    @AnnotationBasedSorter.Order(88)
+    @ConfDefault.DefaultString("GOLD_INGOT")
+    Material crashBetItem();
+
+    @ConfKey("crash.items.betDisabledItem")
+    @AnnotationBasedSorter.Order(89)
+    @ConfDefault.DefaultString("IRON_INGOT")
+    Material crashBetDisabledItem();
+
+    @ConfKey("crash.items.cashoutItem")
+    @AnnotationBasedSorter.Order(90)
+    @ConfDefault.DefaultString("DIAMOND")
+    Material crashCashoutItem();
+
+    @ConfKey("crash.items.cashoutDisabledItem")
+    @AnnotationBasedSorter.Order(91)
+    @ConfDefault.DefaultString("COAL")
+    Material crashCashoutDisabledItem();
+
+    @ConfKey("crash.items.playerInfoItem")
+    @AnnotationBasedSorter.Order(92)
+    @ConfDefault.DefaultString("PLAYER_HEAD")
+    Material playerInfoItem();
+
+    // Titles
+    @ConfKey("crash.titles.statusTitle")
+    @AnnotationBasedSorter.Order(93)
+    @ConfDefault.DefaultString("<#6666ff>ɢᴀᴍᴇ ꜱᴛᴀᴛᴜꜱ")
+    String crashStatusTitle();
+
+    @ConfKey("crash.titles.countdownTitle")
+    @AnnotationBasedSorter.Order(94)
+    @ConfDefault.DefaultString("<#ffaa00>ꜱᴛᴀʀᴛɪɴɢ ɪɴ...")
+    String crashCountdownTitle();
+
+    @ConfKey("crash.titles.gameStartTitle")
+    @AnnotationBasedSorter.Order(95)
+    @ConfDefault.DefaultString("<#55ff55>ɢᴀᴍᴇ ꜱᴛᴀʀᴛᴇᴅ!")
+    String crashGameStartTitle();
+
+    @ConfKey("crash.titles.multiplierTitle")
+    @AnnotationBasedSorter.Order(96)
+    @ConfDefault.DefaultString("<#55ff55>ᴄᴜʀʀᴇɴᴛ ᴍᴜʟᴛɪᴘʟɪᴇʀ")
+    String crashMultiplierTitle();
+
+    @ConfKey("crash.titles.gameEndTitle")
+    @AnnotationBasedSorter.Order(97)
+    @ConfDefault.DefaultString("<#ff5555>ᴄʀᴀꜱʜᴇᴅ!")
+    String crashGameEndTitle();
+
+    @ConfKey("crash.titles.betTitle")
+    @AnnotationBasedSorter.Order(98)
+    @ConfDefault.DefaultString("<#ffaa00>ᴘʟᴀᴄᴇ ʙᴇᴛ")
+    String crashBetTitle();
+
+    @ConfKey("crash.titles.betDisabledTitle")
+    @AnnotationBasedSorter.Order(99)
+    @ConfDefault.DefaultString("<#888888>ʙᴇᴛᴛɪɴɢ ᴄʟᴏꜱᴇᴅ")
+    String crashBetDisabledTitle();
+
+    @ConfKey("crash.titles.cashoutTitle")
+    @AnnotationBasedSorter.Order(100)
+    @ConfDefault.DefaultString("<#55ff55>ᴄᴀꜱʜ ᴏᴜᴛ")
+    String crashCashoutTitle();
+
+    @ConfKey("crash.titles.cashoutDisabledTitle")
+    @AnnotationBasedSorter.Order(101)
+    @ConfDefault.DefaultString("<#888888>ᴄᴀꜱʜ ᴏᴜᴛ")
+    String crashCashoutDisabledTitle();
+
+    @ConfKey("crash.titles.playerInfoTitle")
+    @AnnotationBasedSorter.Order(102)
+    @ConfDefault.DefaultString("<#5555ff>%player%'ꜱ ɪɴꜰᴏ")
+    String playerInfoTitle();
+
+    // Descriptions
+    @ConfKey("crash.descriptions.statusDescription")
+    @AnnotationBasedSorter.Order(103)
+    @ConfDefault.DefaultString("&f<#5555ff>❙ &fCurrent status: <#5555ff>%status%</nl>&f<#5555ff>❙ &fWaiting for players...")
+    String crashStatusDescription();
+
+    @ConfKey("crash.descriptions.countdownDescription")
+    @AnnotationBasedSorter.Order(104)
+    @ConfDefault.DefaultString("&f<#ffaa00>❙ &fGame starts in: <#ffaa00>%seconds%s</nl>&f<#ffaa00>❙ &fPlace your bets now!")
+    String crashCountdownDescription();
+
+    @ConfKey("crash.descriptions.gameStartDescription")
+    @AnnotationBasedSorter.Order(105)
+    @ConfDefault.DefaultString("&f<#55ff55>❙ &fGame is running!</nl>&f<#55ff55>❙ &fCurrent multiplier: <#55ff55>%multiplier%")
+    String crashGameStartDescription();
+
+    @ConfKey("crash.descriptions.multiplierDescription")
+    @AnnotationBasedSorter.Order(106)
+    @ConfDefault.DefaultString("&f<#55ff55>❙ &fCurrent multiplier: <#55ff55>%multiplier%</nl>&f<#55ff55>❙ &fCash out before it crashes!")
+    String crashMultiplierDescription();
+
+    @ConfKey("crash.descriptions.gameEndDescription")
+    @AnnotationBasedSorter.Order(107)
+    @ConfDefault.DefaultString("&f<#ff5555>❙ &fGame crashed at: <#ff5555>%multiplier%</nl>&f<#ff5555>❙ &fBetter luck next time!")
+    String crashGameEndDescription();
+
+    @ConfKey("crash.descriptions.betDescription")
+    @AnnotationBasedSorter.Order(108)
+    @ConfDefault.DefaultString("&f<#ffaa00>❙ &fClick to place your bet</nl>&f<#ffaa00>❙ &fMinimum bet: <#ffaa00>$10")
+    String crashBetDescription();
+
+    @ConfKey("crash.descriptions.betDisabledDescription")
+    @AnnotationBasedSorter.Order(109)
+    @ConfDefault.DefaultString("&f<#888888>❙ &fBetting is closed</nl>&f<#888888>❙ &fWait for next round")
+    String crashBetDisabledDescription();
+
+    @ConfKey("crash.descriptions.cashoutDescription")
+    @AnnotationBasedSorter.Order(110)
+    @ConfDefault.DefaultString("&f<#55ff55>❙ &fCurrent multiplier: <#55ff55>%multiplier%</nl>&f<#55ff55>❙ &fPotential payout: <#55ff55>$%amount%</nl>&f<#55ff55>❙ &fClick to cash out!")
+    String crashCashoutDescription();
+
+    @ConfKey("crash.descriptions.cashoutDisabledDescription")
+    @AnnotationBasedSorter.Order(111)
+    @ConfDefault.DefaultString("&f<#888888>❙ &fYou cannot cash out</nl>&f<#888888>❙ &fNo active bet or already cashed out")
+    String crashCashoutDisabledDescription();
+
+    @ConfKey("crash.descriptions.playerInfoDescription")
+    @AnnotationBasedSorter.Order(112)
+    @ConfDefault.DefaultString("&f<#5555ff>❙ &fBalance: <#5555ff>$%balance%</nl>&f<#5555ff>❙ &fCurrent bet: <#5555ff>$%bet%")
+    String playerInfoDescription();
+
+    // Messages
+    @ConfKey("crash.messages.betPrompt")
+    @AnnotationBasedSorter.Order(113)
+    @ConfDefault.DefaultString("&f<#ffaa00>❙ &fEnter your bet amount in chat:")
+    String crashBetPrompt();
+
+    @ConfKey("crash.messages.minBetMessage")
+    @AnnotationBasedSorter.Order(114)
+    @ConfDefault.DefaultString("&f<#ff5555>❙ &fMinimum bet is <#ff5555>$%min%!")
+    String minBetMessage();
+
+    @ConfKey("crash.messages.betPlacedMessage")
+    @AnnotationBasedSorter.Order(115)
+    @ConfDefault.DefaultString("&f<#55ff55>❙ &fBet of <#55ff55>$%amount% &fplaced successfully!")
+    String crashBetPlacedMessage();
+
+    @ConfKey("crash.messages.betFailedMessage")
+    @AnnotationBasedSorter.Order(116)
+    @ConfDefault.DefaultString("&f<#ff5555>❙ &fFailed to place bet. Game might have already started.")
+    String crashBetFailedMessage();
+
+    @ConfKey("crash.messages.cashoutMessage")
+    @AnnotationBasedSorter.Order(117)
+    @ConfDefault.DefaultString("&f<#55ff55>❙ &fYou cashed out <#55ff55>$%amount% &fat <#55ff55>%multiplier%!")
+    String crashCashoutMessage();
+
+    // Slots messages
+
+    @ConfComments("Configuration for Slots game")
+    @ConfKey("slots.title")
+    @AnnotationBasedSorter.Order(200)
+    @ConfDefault.DefaultString("&6&lSlot Machine")
+    String slotsTitle();
+
+    @ConfKey("slots.instructions.title")
+    @AnnotationBasedSorter.Order(201)
+    @ConfDefault.DefaultString("&e&lHow To Play")
+    String slotsInstructionsTitle();
+
+    @ConfKey("slots.instructions.lore")
+    @AnnotationBasedSorter.Order(202)
+    @ConfDefault.DefaultString("&f• The middle row is the winning line</nl>&f• Match items for higher multipliers</nl>&f• Different items have different values")
+    String slotsInstructionsLore();
+
+    @ConfKey("slots.results.win.title")
+    @AnnotationBasedSorter.Order(203)
+    @ConfDefault.DefaultString("&a&lYou Won!")
+    String slotsWinTitle();
+
+    @ConfKey("slots.results.lose.title")
+    @AnnotationBasedSorter.Order(204)
+    @ConfDefault.DefaultString("&c&lYou Lost!")
+    String slotsLoseTitle();
+
+    @ConfKey("slots.results.win.amount")
+    @AnnotationBasedSorter.Order(205)
+    @ConfDefault.DefaultString("&a&l+${amount}")
+    String slotsWinAmount();
+
+    @ConfKey("slots.results.lose.amount")
+    @AnnotationBasedSorter.Order(206)
+    @ConfDefault.DefaultString("&c&l-${amount}")
+    String slotsLoseAmount();
+
+    @ConfKey("slots.results.win.lore")
+    @AnnotationBasedSorter.Order(207)
+    @ConfDefault.DefaultString("&7You bet: &a&n${bet}</nl>&7Final amount: &a&n${final}</nl></nl>&aWell Done!")
+    String slotsWinLore();
+
+    @ConfKey("slots.results.lose.lore")
+    @AnnotationBasedSorter.Order(208)
+    @ConfDefault.DefaultString("&7You bet: &a&n${bet}</nl>&7Final amount: &a&n${final}</nl></nl>&cBetter luck next time!")
+    String slotsLoseLore();
+
+    @ConfKey("slots.results.multiplier.title")
+    @AnnotationBasedSorter.Order(209)
+    @ConfDefault.DefaultString("&e&lTotal Multiplier")
+    String slotsTotalMultiplierTitle();
+
+    @ConfKey("slots.results.multiplier.value")
+    @AnnotationBasedSorter.Order(210)
+    @ConfDefault.DefaultString("&fx{multiplier}")
+    String slotsTotalMultiplierValue();
+
+    @ConfKey("slots.buttons.play-again")
+    @AnnotationBasedSorter.Order(211)
+    @ConfDefault.DefaultString("&a&lPLAY AGAIN")
+    String slotsPlayAgainTitle();
+
+    @ConfKey("slots.buttons.exit")
+    @AnnotationBasedSorter.Order(212)
+    @ConfDefault.DefaultString("&c&lEXIT")
+    String slotsExitTitle();
+
+    @ConfKey("slots.buttons.spin")
+    @AnnotationBasedSorter.Order(213)
+    @ConfDefault.DefaultString("&a&lSPIN")
+    String slotsSpinTitle();
+
+    @ConfKey("slots.buttons.spin.lore")
+    @AnnotationBasedSorter.Order(214)
+    @ConfDefault.DefaultString("</nl>&8&l| &aClick here to pay for a spin</nl>&8&l| &aYou are betting &a&n$0&a.")
+    String slotsSpinLore();
+
+    @ConfKey("slots.messages.bet-cancel")
+    @AnnotationBasedSorter.Order(215)
+    @ConfDefault.DefaultString("&cBetting cancelled.")
+    String slotsBetCancelMessage();
+
+    @ConfKey("slots.messages.invalid-bet")
+    @AnnotationBasedSorter.Order(216)
+    @ConfDefault.DefaultString("&cInvalid amount. Please enter a number.")
+    String slotsInvalidBetMessage();
+
+    @ConfKey("slots.messages.bet-confirm")
+    @AnnotationBasedSorter.Order(217)
+    @ConfDefault.DefaultString("&aYou have bet ${amount}.")
+    String slotsBetConfirmMessage();
+
+    @ConfKey("slots.messages.min-bet")
+    @AnnotationBasedSorter.Order(218)
+    @ConfDefault.DefaultString("&cMinimum bet is ${min}!")
+    String slotsMinBetMessage();
+
     // Command Messages
     @ConfComments("Messages related to the /casino command")
     @ConfKey("messages.command.permission-denied")
-    @AnnotationBasedSorter.Order(100)
+    @AnnotationBasedSorter.Order(300)
     @ConfDefault.DefaultString("&c&lPermission Denied! &fYou don't have permission to use this command.")
     String permissionDeniedMessage();
 
     @ConfKey("messages.command.invalid-value")
-    @AnnotationBasedSorter.Order(101)
+    @AnnotationBasedSorter.Order(301)
     @ConfDefault.DefaultString("&c&lInvalid Value! </nl>&fThe amount you entered is invalid. Valid ex: 1, 10k, 100m")
     String invalidValueMessage();
 
     @ConfKey("messages.command.reload-time")
-    @AnnotationBasedSorter.Order(103)
+    @AnnotationBasedSorter.Order(303)
     @ConfDefault.DefaultString("&a&lReloaded in &f{ms}ms&a!")
     String reloadTimeMessage();
 
     @ConfKey("messages.command.help")
-    @AnnotationBasedSorter.Order(103)
+    @AnnotationBasedSorter.Order(303)
     @ConfDefault.DefaultString("&6&lFancy Casinos Commands&f:</nl>&f/casino - &7Open the main casino menu</nl>&f/casino reload - &7Reload the plugin configuration</nl>&f/casino help - &7Display this help message")
     String helpMessage();
 
     @ConfKey("messages.general.bet-timeout")
-    @AnnotationBasedSorter.Order(104)
+    @AnnotationBasedSorter.Order(304)
     @ConfDefault.DefaultString("&c&lTimed Out! </nl>&fYour casino session timed out.")
     String betTimeoutMessage();
 
     @ConfKey("messages.general.insufficient-funds")
-    @AnnotationBasedSorter.Order(105)
+    @AnnotationBasedSorter.Order(305)
     @ConfDefault.DefaultString("&c&lInsufficient Funds! </nl>&fYou don't have enough money to place this bet.")
     String insufficientFundsMessage();
+
+
 }

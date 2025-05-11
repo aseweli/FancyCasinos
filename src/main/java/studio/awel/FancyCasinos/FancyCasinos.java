@@ -7,8 +7,8 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import studio.awel.FancyCasinos.commands.CasinoCommand;
 import studio.awel.FancyCasinos.config.ConfigManager;
+import studio.awel.FancyCasinos.crash.CrashMasterClass;
 import studio.awel.FancyCasinos.events.KeepUI;
-import studio.awel.FancyCasinos.slots.SlotsCommand;
 import studio.awel.FancyCasinos.utilities.MoneyUtil;
 
 import java.util.logging.Logger;
@@ -18,6 +18,7 @@ public final class FancyCasinos extends JavaPlugin {
     BukkitCommandManager commandManager;
     public static SpiGUI spiGUI;
     ConfigManager configManager;
+    CrashMasterClass crashMasterClass;
     private static Economy economy = null;
 
     @Override
@@ -26,6 +27,7 @@ public final class FancyCasinos extends JavaPlugin {
         reloadConfig();
         commandManager = new BukkitCommandManager(this);
         spiGUI = new SpiGUI(this);
+        crashMasterClass = CrashMasterClass.getInstance(this, configManager);
         configManager = new ConfigManager(this.getDataFolder());
 
         if (!setupEconomy()) {

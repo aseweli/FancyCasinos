@@ -3,6 +3,7 @@ package studio.awel.FancyCasinos.ui;
 import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -10,6 +11,7 @@ import org.bukkit.inventory.ItemFlag;
 import studio.awel.FancyCasinos.FancyCasinos;
 import studio.awel.FancyCasinos.blackjack.BlackjackGUI;
 import studio.awel.FancyCasinos.config.ConfigManager;
+import studio.awel.FancyCasinos.crash.CrashGUI;
 import studio.awel.FancyCasinos.mines.MinesGUI;
 import studio.awel.FancyCasinos.utilities.MoneyUtil;
 import studio.awel.FancyCasinos.utilities.ColorFormater;
@@ -103,6 +105,13 @@ public class MainGUI {
         switch (type) {
             case 'x':
                 player.closeInventory();
+                break;
+            case 'c':
+                if (player.hasPermission("fancycasinos.crash")) {
+                    new CrashGUI(fancyCasinos, configManager).openGUI(player);
+                } else {
+                    player.sendMessage(ColorFormater.c(configManager.getConfig().permissionDeniedMessage()));
+                }
                 break;
             case 'b':
                 if (player.hasPermission("fancycasinos.blackjack")) {
