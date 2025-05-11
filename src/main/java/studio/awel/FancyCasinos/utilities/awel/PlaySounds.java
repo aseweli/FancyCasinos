@@ -10,10 +10,10 @@ public class PlaySounds {
                 p.playSound(p.getLocation(), "ui.button.click", 1, 1);
                 break;
             case "error":
-                p.playSound(p.getLocation(), "ui.button.error", 1, 1);
+                p.playSound(p.getLocation(), "entity.villager.no", 1, 1);
                 break;
             case "success":
-                p.playSound(p.getLocation(), "ui.button.success", 1, 1);
+                p.playSound(p.getLocation(), "block.amethyst_block.resonate", 1, 1);
                 break;
             case "bomb":
                 p.playSound(p.getLocation(), "entity.generic.explode", 1, 1);
@@ -26,6 +26,9 @@ public class PlaySounds {
                 break;
             case "tie":
                 p.playSound(p.getLocation(), "entity.allay.item_given", 3, 2);
+                break;
+            case "open":
+                p.playSound(p.getLocation(), "block.barrel.open", 1, 1);
                 break;
             default:
                 break;

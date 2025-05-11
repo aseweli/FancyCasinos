@@ -1,10 +1,7 @@
 package studio.awel.FancyCasinos.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import studio.awel.FancyCasinos.FancyCasinos;
@@ -45,8 +42,7 @@ public class CasinoCommand extends BaseCommand {
         sender.sendMessage(ColorFormater.c(message));
     }
 
-    @Subcommand("help")
-    @CommandPermission("fancycasinos.use")
+    @HelpCommand
     public void helpCommand(CommandSender sender) {
         sender.sendMessage(ColorFormater.c(configManager.getConfig().helpMessage()));
     }

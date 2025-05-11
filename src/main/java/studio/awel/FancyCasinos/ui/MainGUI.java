@@ -14,6 +14,7 @@ import studio.awel.FancyCasinos.mines.MinesGUI;
 import studio.awel.FancyCasinos.utilities.MoneyUtil;
 import studio.awel.FancyCasinos.utilities.ColorFormater;
 import studio.awel.FancyCasinos.utilities.CustomItem;
+import studio.awel.FancyCasinos.utilities.awel.PlaySounds;
 
 import java.util.Collections;
 import java.util.EnumMap;
@@ -65,6 +66,7 @@ public class MainGUI {
         }
 
         player.openInventory(menu.getInventory());
+        PlaySounds.sound(player, "open");
     }
 
     private int calculateRows(String layout) {
@@ -113,7 +115,7 @@ public class MainGUI {
             case 'm':
                 if (player.hasPermission("fancycasinos.mines")) {
                     handleGameBet(player, "Mines bet", amount ->
-                            new MinesGUI(configManager).openGUI(player, amount));
+                            new MinesGUI(configManager, fancyCasinos).openGUI(player, amount));
                 } else {
                     player.sendMessage(ColorFormater.c(configManager.getConfig().permissionDeniedMessage()));
                 }
@@ -128,21 +130,33 @@ public class MainGUI {
                     try {
                         double amount = Double.parseDouble(input);
                         if (amount < MIN_BET_AMOUNT) {
-                            String[] message = ColorFormater.c(configManager.getConfig().invalidValueMessage()).split("</nl>");
-                            player.sendTitle(message[0], message[1], 10, 70, 20);
+                            displayTitleSafely(player, configManager.getConfig().invalidValueMessage());
+                            return;
+                        }
+
+                        if (MoneyUtil.getInstance().hasEnough(player, amount)) {
+                            MoneyUtil.getInstance().withdraw(player, amount);
+                            gameStarter.accept(amount);
+                        } else {
+                            displayTitleSafely(player, configManager.getConfig().insufficientFundsMessage());
                             return;
                         }
                         gameStarter.accept(amount);
                     } catch (NumberFormatException e) {
-                        String[] message = ColorFormater.c(configManager.getConfig().invalidValueMessage()).split("</nl>");
-                        player.sendTitle(message[0], message[1], 10, 70, 20);
+                        displayTitleSafely(player, configManager.getConfig().invalidValueMessage());
                     }
                 },
                 () -> {
-                    String[] message = ColorFormater.c(configManager.getConfig().betTimeoutMessage()).split("</nl>");
-                    player.sendTitle(message[0], message[1], 10, 70, 20);
+                    displayTitleSafely(player, configManager.getConfig().betTimeoutMessage());
                 }
         );
+    }
+
+    private void displayTitleSafely(Player player, String message) {
+        String[] parts = ColorFormater.c(message).split("</nl>");
+        String title = parts[0];
+        String subtitle = parts.length > 1 ? parts[1] : "";
+        player.sendTitle(title, subtitle, 10, 70, 20);
     }
 
 

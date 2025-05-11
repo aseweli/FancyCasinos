@@ -1,5 +1,6 @@
 package studio.awel.FancyCasinos.utilities;
 
+import net.milkbowl.vault.economy.Economy;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -7,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import studio.awel.FancyCasinos.FancyCasinos;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,17 +17,22 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MoneyUtil {
-    private static final MoneyUtil instance = new MoneyUtil();
+    private static MoneyUtil instance = new MoneyUtil();
     private JavaPlugin plugin;
+    private Economy economy;
 
     private MoneyUtil() {}
 
     public static MoneyUtil getInstance() {
+        if (instance == null) {
+            instance = new MoneyUtil();
+        }
         return instance;
     }
 
-    public void initialize(JavaPlugin plugin) {
+    public void initialize(FancyCasinos plugin) {
         this.plugin = plugin;
+        this.economy = FancyCasinos.getEconomy();
     }
 
     public static void typeInChat(Player player, String key, long timeoutSeconds, Consumer<String> onReceive, Runnable onTimeout) {
@@ -36,6 +43,8 @@ public class MoneyUtil {
         if (plugin == null) {
             throw new IllegalStateException("MoneyUtil not initialized with plugin instance");
         }
+
+
 
         final boolean[] inputProcessed = {false};
 
@@ -93,4 +102,22 @@ public class MoneyUtil {
             }
         }
     }
+
+    public double getBalance(Player player) {
+        return economy.getBalance(player);
+    }
+
+    public boolean hasEnough(Player player, double amount) {
+        return economy.has(player, amount);
+    }
+
+    public boolean withdraw(Player player, double amount) {
+        return economy.withdrawPlayer(player, amount).transactionSuccess();
+    }
+
+    public boolean deposit(Player player, double amount) {
+        return economy.depositPlayer(player, amount).transactionSuccess();
+    }
+
+
 }

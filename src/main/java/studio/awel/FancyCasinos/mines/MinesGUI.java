@@ -9,9 +9,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import studio.awel.FancyCasinos.FancyCasinos;
 import studio.awel.FancyCasinos.config.ConfigManager;
+import studio.awel.FancyCasinos.ui.MainGUI;
 import studio.awel.FancyCasinos.utilities.ColorFormater;
 import studio.awel.FancyCasinos.utilities.Gambling;
+import studio.awel.FancyCasinos.utilities.MoneyUtil;
 import studio.awel.FancyCasinos.utilities.awel.PlaySounds;
 
 import java.text.DecimalFormat;
@@ -26,6 +29,7 @@ import static studio.awel.FancyCasinos.FancyCasinos.spiGUI;
 
 public class MinesGUI {
     private final ConfigManager manager;
+    private final FancyCasinos plugin;
     private SGMenu firstMenu;
     private SGMenu secondMenu;
     private boolean active;
@@ -36,8 +40,9 @@ public class MinesGUI {
     private static final int[] GLASS_SLOTS = {49, 50, 51, 52, 53};
     private static final int[] GAME_SLOTS = {4, 5, 6, 7, 8, 13, 14, 15, 16, 17, 22, 23, 24, 25, 26, 31, 32, 33, 34, 35, 40, 41, 42, 43, 44};
 
-    public MinesGUI(ConfigManager config) {
+    public MinesGUI(ConfigManager config, FancyCasinos plugin) {
         this.manager = config;
+        this.plugin = plugin;
     }
 
     public void openGUI(Player player, double amount) {
@@ -81,6 +86,7 @@ public class MinesGUI {
 
             setSlot(new int[]{slots[i]}, firstMenu, materials[i], names[i], "", event -> {
                 player.closeInventory();
+                PlaySounds.sound(player, "click");
                 playMines(player, amount, bombCount, multipliers[finalI]);
             });
         }
@@ -135,9 +141,8 @@ public class MinesGUI {
     }
 
     private void setupGameTiles(Player player, double amount, int mines, double multiplier, Set<Integer> bombSet) {
-        final GameState gameState = new GameState(amount, multiplier);
+        final GameState gameState = new GameState(amount, multiplier, mines);
 
-        // Set up safe tiles
         for (int slot : GAME_SLOTS) {
             if (!bombSet.contains(slot)) {
                 setSafeTile(player, slot, gameState);
@@ -156,13 +161,13 @@ public class MinesGUI {
             double reward = gameState.amount * gameState.multiplier;
             gameState.totalPrize += reward;
             ItemStack newItem = createNamedItem(Material.GOLD_NUGGET,
-                    "&6+$" + formatNumberShort(reward, 1));
+                    "&6+$" + formatNumberShort(reward, 2));
             secondMenu.setButton(slot, new SGButton(newItem));
             secondMenu.setName(ColorFormater.c(
                     String.format("%s (%.2fx)", manager.getConfig().minesMenuName(), gameState.currentMultiplier)
             ) + ColorFormater.addIdentifier("m"));
-            updateTracker(player, gameState.totalPrize);
-            updateCounter(player, gameState.minesCleared, GAME_SLOTS.length - gameState.minesCleared - gameState.minesCleared);
+            updateTracker(player, gameState.totalPrize + gameState.amount);
+            updateCounter(player, gameState.bombs, GAME_SLOTS.length - gameState.minesCleared);
             PlaySounds.sound(player, "click");
             secondMenu.refreshInventory(player);
         });
@@ -183,7 +188,7 @@ public class MinesGUI {
 
             setSlot(GLASS_SLOTS, secondMenu, Material.RED_STAINED_GLASS_PANE, " ", "", e -> {});
 
-            updateTracker(player, gameState.totalPrize);
+            updateTracker(player, 0.0);
             secondMenu.refreshInventory(player);
             PlaySounds.sound(player, "bomb");
             Gambling.endPlayerGame(player);
@@ -208,16 +213,24 @@ public class MinesGUI {
 
     public void updateTracker(Player player, Double prize) {
         String name = manager.getConfig().TrackerName()
-                .replace("{amount}", formatNumberShort(prize, 1));
+                .replace("{amount}", formatNumberShort(prize, 2));
         String lore = manager.getConfig().TrackerLore()
-                .replace("{amount}", formatNumberShort(prize, 1));
+                .replace("{amount}", formatNumberShort(prize, 2));
+
+        //IMPORTANT: GO BACK TO HERE
 
         SGButton button = createButton(manager.getConfig().TrackerItem(), name, lore, event -> {
             if (active) {
                 Gambling.endPlayerGame(player);
                 player.closeInventory();
-                player.sendMessage("Claimed " + formatNumberShort(prize, 1) + "!");
+
+                MoneyUtil.getInstance().deposit(player, prize);
+                PlaySounds.sound(player, "success");
+
+                //player.sendMessage("Claimed " + formatNumberShort(prize, 1) + "!");
                 active = false;
+            } else {
+                new MainGUI(manager, plugin).openGUI(player);
             }
         });
 
@@ -311,10 +324,12 @@ public class MinesGUI {
         double totalPrize = 0;
         int minesCleared = 0;
         double currentMultiplier = 1.0;
+        int bombs;
 
-        GameState(double amount, double multiplier) {
+        GameState(double amount, double multiplier, int bombs) {
             this.amount = amount;
             this.multiplier = multiplier;
+            this.bombs = bombs;
         }
     }
 }
