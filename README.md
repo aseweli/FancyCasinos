@@ -1,8 +1,5 @@
 # FancyCasinos
 
-[![Spigot Rating](https://img.shields.io/badge/Spigot-⭐⭐⭐⭐⭐-yellow.svg)](https://www.spigotmc.org/resources/)
-[![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
-
 A premium casino plugin for Minecraft servers featuring beautifully designed gambling games with customizable UI and configurations.
 
 ![Casino Preview](https://i.imgur.com/placeholder.png)
