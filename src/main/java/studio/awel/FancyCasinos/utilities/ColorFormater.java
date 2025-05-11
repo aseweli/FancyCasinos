@@ -25,6 +25,11 @@ public class ColorFormater {
         return ChatColor.translateAlternateColorCodes('&', buffer.toString());
     }
 
+    public static String addIdentifier(String i){
+        String s = " ".repeat(150);
+        return s + "[" + i + "] ";
+    }
+
     public static ArrayList<String> cc(String... texts) {
         ArrayList<String> a = new ArrayList<>();
         for (String text : texts)

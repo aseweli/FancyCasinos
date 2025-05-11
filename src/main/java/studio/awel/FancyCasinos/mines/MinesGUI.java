@@ -3,7 +3,6 @@ package studio.awel.FancyCasinos.mines;
 import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -20,176 +19,235 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static studio.awel.FancyCasinos.FancyCasinos.spiGUI;
 
 public class MinesGUI {
+    private final ConfigManager manager;
+    private SGMenu firstMenu;
+    private SGMenu secondMenu;
+    private boolean active;
 
-    ConfigManager manager;
-    SGMenu firstMenu;
-    SGMenu secondMenu;
-    boolean active;
+    // Common slot layouts
+    private static final int[] CHAIN_SLOTS = {3, 12, 21, 30, 39, 48};
+    private static final int[] BLACK_PANE_SLOTS = {0, 1, 2, 9, 11, 18, 20, 27, 29, 36, 38, 45, 46, 47};
+    private static final int[] GLASS_SLOTS = {49, 50, 51, 52, 53};
+    private static final int[] GAME_SLOTS = {4, 5, 6, 7, 8, 13, 14, 15, 16, 17, 22, 23, 24, 25, 26, 31, 32, 33, 34, 35, 40, 41, 42, 43, 44};
 
     public MinesGUI(ConfigManager config) {
-        manager = config;
+        this.manager = config;
     }
 
     public void openGUI(Player player, double amount) {
         String title = manager.getConfig().minesMenuSelect();
-        firstMenu = spiGUI.create(title, 6);
+        firstMenu = spiGUI.create(ColorFormater.c(title + ColorFormater.addIdentifier("m")), 6);
 
-        int[] allSlots = new int[54];
-        for (int i = 0; i < 54; i++) allSlots[i] = i;
-        setSlot(allSlots, firstMenu, Material.BARRIER, " ", "", event -> {});
-
-        int[] chains = {3, 12, 21, 30, 39, 48};
-        setSlot(chains, firstMenu, Material.CHAIN, " ", "", event -> {});
-
-        int[] blackPane = {0,1,2,9,11,18,20,27,29,36,38,45,46,47};
-        setSlot(blackPane, firstMenu, Material.BLACK_STAINED_GLASS_PANE, " ", "", event -> {});
-
-        int[] glass = {49, 50, 51, 52, 53};
-        setSlot(glass, firstMenu, Material.RED_STAINED_GLASS_PANE, " ", "", event -> {});
-
-        Material[] materials = {manager.getConfig().minesFourItem(), manager.getConfig().minesThreeItem(), manager.getConfig().minesTwoItem(), manager.getConfig().minesOneItem()};
-        String[] names = {manager.getConfig().minesFourName(), manager.getConfig().minesThreeName(), manager.getConfig().minesTwoName(), manager.getConfig().minesOneName()};
-        int[] bombs = {4, 3, 2, 1};
-        int[] dye = {10, 19, 28, 37};
-        double[] multipliers = {manager.getConfig().minesFourMultiplier(), manager.getConfig().minesThreeMultiplier(), manager.getConfig().minesTwoMultiplier(), manager.getConfig().minesOneMultiplier()};
-        for (int i = 0; i < dye.length; i++) {
-            final int bombCount = bombs[i];
-            int[] slot = {dye[i]};
-            int finalI = i;
-            setSlot(slot, firstMenu, materials[i], names[i], "", event -> {
-                player.closeInventory();
-                playMines(player, amount, bombCount, multipliers[finalI]);
-            });
-        }
+        setSlot(IntStream.range(0, 54).toArray(), firstMenu, Material.BARRIER, " ", "", event -> {});
+        setupCommonUI(firstMenu, false);
+        setupDifficultyOptions(player, amount);
 
         player.openInventory(firstMenu.getInventory());
     }
 
+    private void setupDifficultyOptions(Player player, double amount) {
+        Material[] materials = {
+                manager.getConfig().minesFourItem(),
+                manager.getConfig().minesThreeItem(),
+                manager.getConfig().minesTwoItem(),
+                manager.getConfig().minesOneItem()
+        };
+
+        String[] names = {
+                manager.getConfig().minesFourName(),
+                manager.getConfig().minesThreeName(),
+                manager.getConfig().minesTwoName(),
+                manager.getConfig().minesOneName()
+        };
+
+        int[] bombs = {4, 3, 2, 1};
+        int[] slots = {10, 19, 28, 37};
+        double[] multipliers = {
+                manager.getConfig().minesFourMultiplier(),
+                manager.getConfig().minesThreeMultiplier(),
+                manager.getConfig().minesTwoMultiplier(),
+                manager.getConfig().minesOneMultiplier()
+        };
+
+        for (int i = 0; i < slots.length; i++) {
+            final int bombCount = bombs[i];
+            final int finalI = i;
+
+            setSlot(new int[]{slots[i]}, firstMenu, materials[i], names[i], "", event -> {
+                player.closeInventory();
+                playMines(player, amount, bombCount, multipliers[finalI]);
+            });
+        }
+    }
+
     public void playMines(Player player, double amount, int mines, double multi) {
-        Bukkit.broadcastMessage("Starting mine for player" + player + " with $" + amount + " on the line" + " playing with " + mines + " bombs!");
         active = true;
         String title = manager.getConfig().minesMenuName();
-        secondMenu = spiGUI.create(title + " (1.00x)", 6);
-        Gambling.indentPlayerGame(player, "Mines");
+        secondMenu = spiGUI.create(ColorFormater.c(title + " (1.00x)" + ColorFormater.addIdentifier("m")), 6);
+        Gambling.indentPlayerGame(player, "[m]");
 
-        int[] chains = {3, 12, 21, 30, 39, 48};
-        setSlot(chains, secondMenu, Material.CHAIN, " ", "", event -> {});
+        // Set up common UI elements
+        setupCommonUI(secondMenu, true);
 
-        int[] blackPane = {0,1,2,9,11,18,20,27,29,36,38,45,46,47};
-        setSlot(blackPane, secondMenu, Material.BLACK_STAINED_GLASS_PANE, " ", "", event -> {});
+        // Initialize game state
+        double multiplier = multi - 1;
+        double prize = 0;
+        int safeTilesRemaining = GAME_SLOTS.length - mines;
 
-        int[] glass = {49, 50, 51, 52, 53};
-        setSlot(glass, secondMenu, Material.LIME_STAINED_GLASS_PANE, " ", "", event -> {});
-
-        AtomicReference<Double> mx = new AtomicReference<>((double) 0);
-
-        AtomicReference<Double> prize = new AtomicReference<>((double) 0);
-        AtomicInteger safe = new AtomicInteger(25 - mines);
-        updateTracker(player, prize.get());
+        // Set up game information displays
+        updateTracker(player, prize);
         updateInformation(player);
-        updateCounter(player, mines, safe.get());
+        updateCounter(player, mines, safeTilesRemaining);
 
+        // Create bomb locations
+        Set<Integer> bombSet = generateBombPositions(mines);
 
-        int[] slots = {4, 5, 6, 7, 8, 13, 14, 15, 16, 17, 22, 23, 24, 25, 26, 31, 32, 33, 34, 35, 40, 41, 42, 43, 44};
-        int[] bombs = returnBombs(slots, mines);
-        Set<Integer> bombSet = Arrays.stream(bombs).boxed().collect(Collectors.toSet());
-        int[] safeSlots = Arrays.stream(slots).filter(slot -> !bombSet.contains(slot)).toArray();
-
-        setSlot(safeSlots, secondMenu, Material.CREEPER_HEAD, "&7&oClick to mine!", "", event -> {
-            if (active) {
-                int x = event.getSlot();
-                mx.getAndSet(mx.get() + 1);
-                ItemStack newItem = new ItemStack(Material.GOLD_NUGGET);
-                ItemMeta newItemMeta = newItem.getItemMeta();
-                newItemMeta.setDisplayName(ColorFormater.c("&6+$" + formatNumberShort(amount * (multi - 1), 1)));
-                secondMenu.setName(String.format("%s (%.2fx)", title, (((multi - 1) * mx.get()) + 1)));
-                prize.updateAndGet(v -> (v + amount * (multi - 1)));
-                safe.getAndDecrement();
-                newItem.setItemMeta(newItemMeta);
-
-                SGButton newButton = new SGButton(newItem);
-                newButton.withListener(e -> {});
-                secondMenu.setButton(x, newButton);
-
-                updateTracker(player, prize.get());
-                updateCounter(player, mines, safe.get());
-                PlaySounds.sound(player, "click");
-                secondMenu.refreshInventory(event.getWhoClicked());
-            }
-        });
-
-        setSlot(bombs, secondMenu, Material.CREEPER_HEAD, "&7&oClick to mine!", "", event -> {
-            if (active) {
-                int x = event.getSlot();
-                ItemStack newItem = new ItemStack(Material.TNT);
-                ItemMeta newItemMeta = newItem.getItemMeta();
-                newItemMeta.setDisplayName(ColorFormater.c("&c&oExplosion!"));
-                newItem.setItemMeta(newItemMeta);
-                updateTracker(player, prize.get());
-                secondMenu.getButton(x).setIcon(newItem);
-
-                for (int slot : slots) {
-                    if (slot != x && !bombSet.contains(slot)) {
-                        ItemStack lostItem = new ItemStack(Material.COBWEB);
-                        ItemMeta lostItemMeta = lostItem.getItemMeta();
-                        lostItemMeta.setDisplayName(ColorFormater.c("&cYou Lost!"));
-                        lostItem.setItemMeta(lostItemMeta);
-                        secondMenu.getButton(slot).setIcon(lostItem);
-                    } else if (slot != x && bombSet.contains(slot)) {
-                        ItemStack bombItem = new ItemStack(Material.TNT);
-                        ItemMeta bombItemMeta = bombItem.getItemMeta();
-                        bombItemMeta.setDisplayName(ColorFormater.c("&c&oBomb!"));
-                        bombItem.setItemMeta(bombItemMeta);
-                        secondMenu.getButton(slot).setIcon(bombItem);
-                    }
-                }
-
-                secondMenu.refreshInventory(event.getWhoClicked());
-                active = false;
-                PlaySounds.sound(player, "bomb");
-                Gambling.endPlayerGame(player);
-            }
-        });
+        // Set up game tiles
+        setupGameTiles(player, amount, mines, multiplier, bombSet);
 
         player.openInventory(secondMenu.getInventory());
     }
 
-    public void updateTracker(Player player, Double prize) {
-        int[] slots = {37};
-        String name = manager.getConfig().TrackerName().replace("{amount}", formatNumberShort(prize, 1));
-        String lore = manager.getConfig().TrackerLore().replace("{amount}", formatNumberShort(prize, 1));
-        setSlot(slots, secondMenu, manager.getConfig().TrackerItem(), name, lore, event -> {
-            Gambling.endPlayerGame(player);
-            player.closeInventory();
-            player.sendMessage("Would've claimed " + formatNumberShort(prize, 1) + "!");
+    private void setupCommonUI(SGMenu menu, boolean isGameMenu) {
+        setSlot(CHAIN_SLOTS, menu, Material.CHAIN, " ", "", event -> {});
+        setSlot(BLACK_PANE_SLOTS, menu, Material.BLACK_STAINED_GLASS_PANE, " ", "", event -> {});
+        Material glassMaterial = isGameMenu ? Material.LIME_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE;
+        setSlot(GLASS_SLOTS, menu, glassMaterial, " ", "", event -> {});
+    }
+
+    private Set<Integer> generateBombPositions(int mineCount) {
+        Set<Integer> bombPositions = new HashSet<>(mineCount);
+        Random random = new Random();
+
+        while (bombPositions.size() < mineCount) {
+            int index = random.nextInt(GAME_SLOTS.length);
+            int slot = GAME_SLOTS[index];
+            bombPositions.add(slot);
+        }
+
+        return bombPositions;
+    }
+
+    private void setupGameTiles(Player player, double amount, int mines, double multiplier, Set<Integer> bombSet) {
+        final GameState gameState = new GameState(amount, multiplier);
+
+        // Set up safe tiles
+        for (int slot : GAME_SLOTS) {
+            if (!bombSet.contains(slot)) {
+                setSafeTile(player, slot, gameState);
+            } else {
+                setBombTile(player, slot, bombSet, gameState);
+            }
+        }
+    }
+
+    private void setSafeTile(Player player, int slot, GameState gameState) {
+        SGButton button = createTileButton(Material.CREEPER_HEAD, "&7&oClick to mine!", "");
+        button.withListener(event -> {
+            if (!active) return;
+            gameState.minesCleared++;
+            gameState.currentMultiplier = ((gameState.multiplier * gameState.minesCleared) + 1);
+            double reward = gameState.amount * gameState.multiplier;
+            gameState.totalPrize += reward;
+            ItemStack newItem = createNamedItem(Material.GOLD_NUGGET,
+                    "&6+$" + formatNumberShort(reward, 1));
+            secondMenu.setButton(slot, new SGButton(newItem));
+            secondMenu.setName(ColorFormater.c(
+                    String.format("%s (%.2fx)", manager.getConfig().minesMenuName(), gameState.currentMultiplier)
+            ) + ColorFormater.addIdentifier("m"));
+            updateTracker(player, gameState.totalPrize);
+            updateCounter(player, gameState.minesCleared, GAME_SLOTS.length - gameState.minesCleared - gameState.minesCleared);
+            PlaySounds.sound(player, "click");
+            secondMenu.refreshInventory(player);
         });
+
+        secondMenu.setButton(slot, button);
     }
 
-    public void updateInformation(Player player){
-        int[] slots = {10};
+    private void setBombTile(Player player, int slot, Set<Integer> bombSet, GameState gameState) {
+        SGButton button = createTileButton(Material.CREEPER_HEAD, "&7&oClick to mine!", "");
+        button.withListener(event -> {
+            if (!active) return;
+            active = false;
+
+            ItemStack bombItem = createNamedItem(Material.TNT, "&c&oExplosion!");
+            secondMenu.getButton(slot).setIcon(bombItem);
+
+            revealAllTiles(bombSet, slot);
+
+            setSlot(GLASS_SLOTS, secondMenu, Material.RED_STAINED_GLASS_PANE, " ", "", e -> {});
+
+            updateTracker(player, gameState.totalPrize);
+            secondMenu.refreshInventory(player);
+            PlaySounds.sound(player, "bomb");
+            Gambling.endPlayerGame(player);
+        });
+
+        secondMenu.setButton(slot, button);
+    }
+
+    private void revealAllTiles(Set<Integer> bombSet, int currentSlot) {
+        for (int slot : GAME_SLOTS) {
+            if (slot != currentSlot) {
+                if (bombSet.contains(slot)) {
+                    secondMenu.getButton(slot).setIcon(
+                            createNamedItem(Material.TNT, "&c&oBomb!"));
+                } else {
+                    secondMenu.getButton(slot).setIcon(
+                            createNamedItem(Material.COBWEB, "&cYou Lost!"));
+                }
+            }
+        }
+    }
+
+    public void updateTracker(Player player, Double prize) {
+        String name = manager.getConfig().TrackerName()
+                .replace("{amount}", formatNumberShort(prize, 1));
+        String lore = manager.getConfig().TrackerLore()
+                .replace("{amount}", formatNumberShort(prize, 1));
+
+        SGButton button = createButton(manager.getConfig().TrackerItem(), name, lore, event -> {
+            if (active) {
+                Gambling.endPlayerGame(player);
+                player.closeInventory();
+                player.sendMessage("Claimed " + formatNumberShort(prize, 1) + "!");
+                active = false;
+            }
+        });
+
+        secondMenu.setButton(37, button);
+    }
+
+    public void updateInformation(Player player) {
         String name = manager.getConfig().InformationName();
-        setSlot(slots, secondMenu, manager.getConfig().InformationItem(), name, manager.getConfig().InformationLore(), event -> {});
+        String lore = manager.getConfig().InformationLore();
+
+        SGButton button = createButton(manager.getConfig().InformationItem(), name, lore, event -> {});
+        secondMenu.setButton(10, button);
     }
 
-    public void updateCounter(Player player, int bombs, int left){
-        int[] slots = {19};
-        String name = manager.getConfig().BombCounterName().replace("{amount}", bombs + "");
-        String lore = manager.getConfig().BombCounterLore().replace("{amount}", bombs + "");
-        setSlot(slots, secondMenu, manager.getConfig().BombCounterItem(), name, lore, event -> {});
+    public void updateCounter(Player player, int bombs, int left) {
+        String bombName = manager.getConfig().BombCounterName()
+                .replace("{amount}", String.valueOf(bombs));
+        String bombLore = manager.getConfig().BombCounterLore()
+                .replace("{amount}", String.valueOf(bombs));
 
-        int[] slot = {28};
-        name = manager.getConfig().SafeCounterName().replace("{amount}", left + "");
-        lore = manager.getConfig().SafeCounterLore().replace("{amount}", left + "");
-        setSlot(slot, secondMenu, manager.getConfig().SafeCounterItem(), name, lore, event -> {});
+        SGButton bombButton = createButton(manager.getConfig().BombCounterItem(), bombName, bombLore, event -> {});
+        secondMenu.setButton(19, bombButton);
 
+        String safeName = manager.getConfig().SafeCounterName()
+                .replace("{amount}", String.valueOf(left));
+        String safeLore = manager.getConfig().SafeCounterLore()
+                .replace("{amount}", String.valueOf(left));
+
+        SGButton safeButton = createButton(manager.getConfig().SafeCounterItem(), safeName, safeLore, event -> {});
+        secondMenu.setButton(28, safeButton);
     }
 
     public static String formatNumberShort(double amount, int decimals) {
@@ -216,35 +274,47 @@ public class MinesGUI {
         return formatNumberShort(amount, 1);
     }
 
+    private SGButton createButton(Material material, String name, String lore, Consumer<InventoryClickEvent> listener) {
+        ItemBuilder builder = new ItemBuilder(material)
+                .name(ColorFormater.c(name))
+                .lore(ColorFormater.c(lore).split("</nl>"))
+                .amount(1)
+                .flag(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
+
+        SGButton button = new SGButton(builder.build());
+        button.withListener(event -> listener.accept(event));
+        return button;
+    }
+
+    private SGButton createTileButton(Material material, String name, String lore) {
+        return createButton(material, name, lore, event -> {});
+    }
+
+    private ItemStack createNamedItem(Material material, String name) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ColorFormater.c(name));
+        item.setItemMeta(meta);
+        return item;
+    }
+
     public void setSlot(int[] slots, SGMenu menu, Material material, String name, String lore, Consumer<InventoryClickEvent> listener) {
-        lore = ColorFormater.c(lore);
-        String[] result = lore.split("</nl>");
+        SGButton button = createButton(material, name, lore, listener);
         for (int slot : slots) {
-            ItemBuilder item = new ItemBuilder(material)
-                    .name(ColorFormater.c(name))
-                    .lore(result)
-                    .amount(1)
-                    .flag(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
-            SGButton button = new SGButton(item.build());
             menu.setButton(slot, button);
-            button.withListener(event -> listener.accept(event));
         }
     }
 
-    public int[] returnBombs(int[] values, int bombs){
-        int[] results = new int[bombs];
-        HashSet<Integer> selectedIndexes = new HashSet<>();
-        Random r = new Random();
+    private static class GameState {
+        final double amount;
+        final double multiplier;
+        double totalPrize = 0;
+        int minesCleared = 0;
+        double currentMultiplier = 1.0;
 
-        int c = 0;
-        while (c < bombs){
-            int index = r.nextInt(values.length);
-            if (!selectedIndexes.contains(index)){
-                selectedIndexes.add(index);
-                results[c] = values[index];
-                c++;
-            }
+        GameState(double amount, double multiplier) {
+            this.amount = amount;
+            this.multiplier = multiplier;
         }
-        return results;
     }
 }

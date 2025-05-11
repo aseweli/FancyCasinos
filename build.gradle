@@ -11,6 +11,8 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.codemc.io/repository/maven-snapshots/' }
+
     maven {
         name = "spigotmc-repo"
         url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
@@ -40,10 +42,13 @@ dependencies {
     implementation 'space.arim.dazzleconf:dazzleconf-ext-snakeyaml:1.2.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
+    implementation 'net.wesjd:anvilgui:1.10.5-SNAPSHOT'
+
 }
 
 shadowJar {
     relocate 'org.yaml.snakeyaml', 'studio.awel.xCasinos.shaded.snakeyaml'
+    relocate 'net.wesjd.anvilgui', 'studio.awel.xCasinos.anvilgui'
     relocate"space.arim.dazzleconf", "studio.awel.xCasinos.libs.dazzleconf"
     archiveClassifier.set('')
 }

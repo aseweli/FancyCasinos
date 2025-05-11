@@ -44,9 +44,9 @@ public class BlackjackGame {
         dealerHand.addCard(deck.dealCard());
 
         // Check for blackjack
-        if (playerHand.isBlackjack() || dealerHand.isBlackjack()) {
-            gameEnded = true;
-        }
+        //if (playerHand.isBlackjack() || dealerHand.isBlackjack()) {
+        //    gameEnded = true;
+        //}
     }
 
     public Card playerHit() {
@@ -101,7 +101,7 @@ public class BlackjackGame {
         } else if (playerValue < dealerValue) {
             return new GameResult(bjMath.ResultType.DEALER_WIN, 0);
         } else {
-            return new GameResult(bjMath.ResultType.PUSH, bet); // Tie, return the bet
+            return new GameResult(bjMath.ResultType.PUSH, bet);
         }
     }
 

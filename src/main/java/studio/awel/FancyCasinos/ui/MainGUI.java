@@ -5,183 +5,222 @@ import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import studio.awel.FancyCasinos.FancyCasinos;
 import studio.awel.FancyCasinos.blackjack.BlackjackGUI;
 import studio.awel.FancyCasinos.config.ConfigManager;
 import studio.awel.FancyCasinos.mines.MinesGUI;
+import studio.awel.FancyCasinos.utilities.MoneyUtil;
 import studio.awel.FancyCasinos.utilities.ColorFormater;
 import studio.awel.FancyCasinos.utilities.CustomItem;
-import studio.awel.FancyCasinos.utilities.cigan.ChatUtilKt;
 
+import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static studio.awel.FancyCasinos.FancyCasinos.spiGUI;
 
 public class MainGUI {
+    private static final Logger LOGGER = Logger.getLogger("FancyCasinos Menu Manager");
+    private static final double MIN_BET_AMOUNT = 1.0;
+    private static final String INVALID_AMOUNT_MSG = "Invalid amount";
+    private static final String TIMEOUT_MSG = "Ran out of time buddy!";
+    private static final int MAX_ROWS = 6;
+    private static final int MIN_ROWS = 1;
 
-    ConfigManager configManager;
-    FancyCasinos fancyCasinos;
-    private final static Logger logger = Logger.getLogger("XCasino Menu Manager");
-    SGMenu menu;
+    private final ConfigManager configManager;
+    private final FancyCasinos fancyCasinos;
+    private final Map<Character, ItemInfo> itemInfoMap = new HashMap<>();
 
     public MainGUI(ConfigManager configManager, FancyCasinos fancyCasinos) {
         this.configManager = configManager;
         this.fancyCasinos = fancyCasinos;
+        initializeItemInfoMap();
     }
 
-    public void openGUI(Player player){
-        String title = configManager.getConfig().guiName();
 
-        int x = configManager.getConfig().guiLayout().replace("\n", "").length();
+    public void openGUI(Player player) {
         String layout = configManager.getConfig().guiLayout().replace("\n", "");
-        int rows = x/9;
-        if (rows < 1 || rows > 6){
-            logger.severe("The menu is not formatted correctly, please recreate the config.yml file.");
-        }
-        menu = spiGUI.create(title, rows);
+        int rows = calculateRows(layout);
 
-        for (int i = 0; i < layout.length(); i++){
-            if (layout.charAt(i) == '-'){
-                Material material = configManager.getConfig().blankObject();
-                ItemBuilder item = new ItemBuilder(material)
-                        .name("")
-                        .lore("")
-                        .amount(1)
-                        .flag(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
-                SGButton button = new SGButton(item.build());
-                menu.setButton(i, button);
-            }else {
-                issueGamemodes(layout.charAt(i), i);
+        if (rows < MIN_ROWS || rows > MAX_ROWS) {
+            LOGGER.severe("The menu is not formatted correctly, please recreate the config.yml file.");
+            player.sendMessage(ColorFormater.c("&cThere was an error opening the casino menu. Please contact an administrator."));
+            return;
+        }
+
+        SGMenu menu = spiGUI.create(ColorFormater.c(configManager.getConfig().guiName()), rows);
+
+        // Fill menu with items based on layout
+        for (int i = 0; i < layout.length() && i < rows * 9; i++) {
+            if (layout.charAt(i) == '-') {
+                setBlankItem(menu, i);
+            } else {
+                setGameItem(menu, layout.charAt(i), i);
             }
         }
+
         player.openInventory(menu.getInventory());
     }
 
-    public void issueGamemodes(char slot, int i) {
-        Material material = null;
-        String name = "";
-        String lore = "";
-        Map<Character, CustomItem> customItems = parseCustomItems();
+    private int calculateRows(String layout) {
+        return Math.max(MIN_ROWS, Math.min(layout.length() / 9 + (layout.length() % 9 > 0 ? 1 : 0), MAX_ROWS));
+    }
 
-        switch (slot) {
-            case 's':
-                material = configManager.getConfig().slotsItem();
-                name = configManager.getConfig().slotsName();
-                lore = configManager.getConfig().slotsDescription();
-                break;
-            case 'm':
-                material = configManager.getConfig().minesItem();
-                name = configManager.getConfig().minesName();
-                lore = configManager.getConfig().minesDescription();
-                break;
-            case 'c':
-                material = configManager.getConfig().crashItem();
-                name = configManager.getConfig().crashName();
-                lore = configManager.getConfig().crashDescription();
+    private void setBlankItem(SGMenu menu, int slot) {
+        SGButton button = createButton(
+                configManager.getConfig().blankObject(),
+                "",
+                "",
+                event -> {}
+        );
+        menu.setButton(slot, button);
+    }
+
+    private void setGameItem(SGMenu menu, char type, int slot) {
+        ItemInfo itemInfo = getItemInfo(type);
+
+        SGButton button = createButton(
+                itemInfo.material,
+                itemInfo.name,
+                itemInfo.lore,
+                event -> handleItemClick(event, type)
+        );
+
+        menu.setButton(slot, button);
+    }
+
+
+    private void handleItemClick(InventoryClickEvent event, char type) {
+        Player player = (Player) event.getWhoClicked();
+
+        switch (type) {
+            case 'x':
+                player.closeInventory();
                 break;
             case 'b':
-                material = configManager.getConfig().blackjackItem();
-                name = configManager.getConfig().blackjackName();
-                lore = configManager.getConfig().blackjackDescription();
+                handleGameBet(player, "Blackjack bet", amount ->
+                        new BlackjackGUI(player, amount, configManager).openGUI());
                 break;
-            case 'x':
-                material = configManager.getConfig().exitItem();
-                name = configManager.getConfig().exitName();
-                lore = configManager.getConfig().exitDescription();
+            case 'm':
+                handleGameBet(player, "Mines bet", amount ->
+                        new MinesGUI(configManager).openGUI(player, amount));
                 break;
-            default:
-                // Check if it's a custom item
-                CustomItem customItem = customItems.get(slot);
-                if (customItem != null) {
-                    material = customItem.material;
-                    name = customItem.name;
-                    lore = customItem.lore;
-                } else {
-                    material = Material.BARRIER;
-                    name = "§cInvalid Item";
-                    lore = "§7This item is not configured properly";
-                    logger.warning("No definition found for custom item character: '" + slot + "'");
-                }
         }
+    }
 
+    private void handleGameBet(Player player, String prompt, Consumer<Double> gameStarter) {
+        player.closeInventory();
+        MoneyUtil.typeInChat(player, prompt, 15L,
+                input -> {
+                    try {
+                        double amount = Double.parseDouble(input);
+                        if (amount < MIN_BET_AMOUNT) {
+                            player.sendMessage(INVALID_AMOUNT_MSG);
+                            return;
+                        }
+                        gameStarter.accept(amount);
+                    } catch (NumberFormatException e) {
+                        player.sendMessage("[Null] " + INVALID_AMOUNT_MSG);
+                    }
+                },
+                () -> player.sendMessage(TIMEOUT_MSG)
+        );
+    }
+
+
+    private SGButton createButton(Material material, String name, String lore, Consumer<InventoryClickEvent> clickHandler) {
         if (material == null) {
             material = Material.BARRIER;
             name = "§cError";
             lore = "§7Invalid material for this item";
-            logger.warning("Null material for menu item: " + slot);
+            LOGGER.warning("Null material used for button");
         }
 
+        ItemBuilder itemBuilder;
 
-        lore = ColorFormater.c(lore);
-        String[] results = lore.split("</nl>");
-
-        ItemBuilder item;
-        if (material != Material.AIR){
-            item = new ItemBuilder(material)
+        if (material != Material.AIR) {
+            String[] loreLines = ColorFormater.c(lore).split("</nl>");
+            itemBuilder = new ItemBuilder(material)
                     .name(ColorFormater.c(name))
-                    .lore(results)
+                    .lore(loreLines)
                     .amount(1)
-                    .flag(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
+                    .flag(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
         } else {
-            item = new ItemBuilder(Material.AIR)
-                    .amount(1);
+            itemBuilder = new ItemBuilder(Material.AIR).amount(1);
         }
 
-
-        SGButton button = new SGButton(item.build());
-        menu.setButton(i, button);
-
-        button.withListener(inventoryClickEvent -> {
-            Player user = (Player) inventoryClickEvent.getWhoClicked();
-            switch (slot) {
-                case 'x':
-                    user.closeInventory();
-                    break;
-                case 'b':
-                    user.closeInventory();
-                    ChatUtilKt.typeInChat(user, "Blackjack bet", 15L, (String found) -> {
-                        try {
-                            double amount = Double.parseDouble(found);
-                            if (amount < 1) {
-                                user.sendMessage("Invalid amount");
-                                return null;
-                            }
-                            new BlackjackGUI(user, amount, configManager).openGUI();
-                        } catch (NumberFormatException e) {
-                            user.sendMessage("[Null] Invalid amount");
-                        }
-                        return null;
-                    }, () -> {
-                        user.sendMessage("Ran out of time buddy!");
-                        return null;
-                    });
-                    break;
-
-                case 'm':
-                    user.closeInventory();
-                    ChatUtilKt.typeInChat(user, "Mines bet", 15L, (String found) -> {
-                        try {
-                            double amount = Double.parseDouble(found);
-                            if (amount < 1) {
-                                user.sendMessage("Invalid amount");
-                                return null;
-                            }
-                            (new MinesGUI(configManager)).openGUI(user, amount);
-                        } catch (NumberFormatException e) {
-                            user.sendMessage("[Null] Invalid amount");
-                        }
-                        return null;
-                    }, () -> {
-                        user.sendMessage("Ran out of time buddy!");
-                        return null;
-                    });
-                    break;
-            }
-        });
+        SGButton button = new SGButton(itemBuilder.build());
+        button.withListener(clickHandler::accept);
+        return button;
     }
+
+
+    private void initializeItemInfoMap() {
+        itemInfoMap.put('s', new ItemInfo(
+                configManager.getConfig().slotsItem(),
+                configManager.getConfig().slotsName(),
+                configManager.getConfig().slotsDescription()
+        ));
+
+        itemInfoMap.put('m', new ItemInfo(
+                configManager.getConfig().minesItem(),
+                configManager.getConfig().minesName(),
+                configManager.getConfig().minesDescription()
+        ));
+
+        itemInfoMap.put('c', new ItemInfo(
+                configManager.getConfig().crashItem(),
+                configManager.getConfig().crashName(),
+                configManager.getConfig().crashDescription()
+        ));
+
+        itemInfoMap.put('b', new ItemInfo(
+                configManager.getConfig().blackjackItem(),
+                configManager.getConfig().blackjackName(),
+                configManager.getConfig().blackjackDescription()
+        ));
+
+        itemInfoMap.put('x', new ItemInfo(
+                configManager.getConfig().exitItem(),
+                configManager.getConfig().exitName(),
+                configManager.getConfig().exitDescription()
+        ));
+
+        try {
+            Map<Character, CustomItem> customItems = parseCustomItems();
+            for (Map.Entry<Character, CustomItem> entry : customItems.entrySet()) {
+                char key = entry.getKey();
+                CustomItem item = entry.getValue();
+                itemInfoMap.put(key, new ItemInfo(item.material, item.name, item.lore));
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error loading custom items", e);
+        }
+    }
+
+
+    private ItemInfo getItemInfo(char type) {
+        ItemInfo info = itemInfoMap.get(type);
+
+        if (info == null) {
+            LOGGER.warning("No definition found for item type: '" + type + "'");
+            return new ItemInfo(
+                    Material.BARRIER,
+                    "§cInvalid Item",
+                    "§7This item is not configured properly"
+            );
+        }
+
+        return info;
+    }
+
 
     private Map<Character, CustomItem> parseCustomItems() {
         Map<Character, CustomItem> items = new HashMap<>();
@@ -201,16 +240,32 @@ public class MainGUI {
                         String lore = parts[3];
                         items.put(key, new CustomItem(material, name, lore));
                     } catch (IllegalArgumentException e) {
-                        logger.warning("Invalid material for custom item '" + parts[0] + "': " + parts[1]);
+                        LOGGER.warning("Invalid material for custom item '" + parts[0] + "': " + parts[1]);
                     }
                 } else {
-                    logger.warning("Invalid custom item format: " + definition);
+                    LOGGER.warning("Invalid custom item format: " + definition);
                 }
             }
         } catch (Exception e) {
-            logger.severe("Error parsing custom items: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Error parsing custom items", e);
+            return Collections.emptyMap();
         }
 
         return items;
+    }
+
+    /**
+     * Helper class to store item information
+     */
+    private static class ItemInfo {
+        final Material material;
+        final String name;
+        final String lore;
+
+        ItemInfo(Material material, String name, String lore) {
+            this.material = material;
+            this.name = name;
+            this.lore = lore;
+        }
     }
 }

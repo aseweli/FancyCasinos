@@ -10,8 +10,10 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.scheduler.BukkitRunnable
 import studio.awel.FancyCasinos.FancyCasinos
+import studio.awel.FancyCasinos.utilities.MoneyUtil
+
 import studio.awel.FancyCasinos.utilities.cigan.translate
-import studio.awel.FancyCasinos.utilities.cigan.typeInChat
+import java.util.function.Consumer
 
 class SlotGUI {
 
@@ -54,21 +56,26 @@ class SlotGUI {
             val user = event.whoClicked as Player
             user.closeInventory()
 
-            user.typeInChat("Slots Bet", 15L, onRecieve = { input ->
-                val amount = input.toDoubleOrNull()
-                if (amount == null) {
-                    user.sendMessage("&cInvalid amount. Please enter a number.".translate())
-                    return@typeInChat
-                } else {
-                    user.sendMessage("&aYou have bet $amount.".translate())
+            MoneyUtil.typeInChat(user, "Slots Bet", 15L,
+                Consumer<String> { input ->
+                    val amount = input.toDoubleOrNull()
+                    if (amount == null) {
+                        user.sendMessage("&cInvalid amount. Please enter a number.".translate())
+                        return@Consumer
+                    } else {
+                        user.sendMessage("&aYou have bet $amount.".translate())
 
-                    val animationMenu = FancyCasinos.spiGUI.create("Slots", 5)
-                    setupSlotMachine(animationMenu)
-                    user.openInventory(animationMenu.inventory)
+                        val animationMenu = FancyCasinos.spiGUI.create("Slots", 5)
+                        setupSlotMachine(animationMenu)
+                        user.openInventory(animationMenu.inventory)
 
-                    startSlotAnimation(user, animationMenu, amount)
+                        startSlotAnimation(user, animationMenu, amount)
+                    }
+                },
+                Runnable {
+                    user.sendMessage("&cBetting cancelled.".translate())
                 }
-            })
+            )
         }
 
         menu.setButton(24, spinButton)
@@ -257,21 +264,27 @@ class SlotGUI {
         val playAgainButton = SGButton(playAgainItem).withListener { event: InventoryClickEvent ->
             val user = event.whoClicked as Player
             user.closeInventory()
-            user.typeInChat("Slots Bet", 15L, onRecieve = { input ->
-                val amount = input.toDoubleOrNull()
-                if (amount == null) {
-                    user.sendMessage("&cInvalid amount. Please enter a number.".translate())
-                    return@typeInChat
-                } else {
-                    user.sendMessage("&aYou have bet $amount.".translate())
 
-                    val animationMenu = FancyCasinos.spiGUI.create("Slots", 5)
-                    setupSlotMachine(animationMenu)
-                    user.openInventory(animationMenu.inventory)
+            MoneyUtil.typeInChat(user, "Slots Bet", 15L,
+                Consumer<String> { input ->
+                    val amount = input.toDoubleOrNull()
+                    if (amount == null) {
+                        user.sendMessage("&cInvalid amount. Please enter a number.".translate())
+                        return@Consumer
+                    } else {
+                        user.sendMessage("&aYou have bet $amount.".translate())
 
-                    startSlotAnimation(user, animationMenu, amount)
+                        val animationMenu = FancyCasinos.spiGUI.create("Slots", 5)
+                        setupSlotMachine(animationMenu)
+                        user.openInventory(animationMenu.inventory)
+
+                        startSlotAnimation(user, animationMenu, amount)
+                    }
+                },
+                Runnable {
+                    user.sendMessage("&cBetting cancelled.".translate())
                 }
-            })
+            )
         }
         resultScreen.setButton(38, playAgainButton)
 

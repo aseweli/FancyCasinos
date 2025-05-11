@@ -22,11 +22,20 @@ public class KeepUI implements Listener {
         if (Gambling.isPlayerInGame((Player) e.getPlayer())) {
             Inventory closedInventory = e.getInventory();
             Player player = (Player) e.getPlayer();
-            Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                if (player.getOpenInventory().getTitle() == null || !player.getOpenInventory().getTitle().toLowerCase().contains(Gambling.getPlayerGame(player).toLowerCase())) {
-                    player.openInventory(closedInventory);
-                }
-            }, 1L);
+            try {
+                Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                    String gameId = Gambling.getPlayerGame(player);
+                    String game = "";
+                    if (gameId != null) {
+                        game = gameId.toLowerCase();
+                    }
+                    if (player.getOpenInventory().getTitle() == null || !player.getOpenInventory().getTitle().toLowerCase().contains(game)) {
+                        player.openInventory(closedInventory);
+                    }
+                }, 1L);
+            } catch (Exception ex) {
+                plugin.getLogger().warning("An error occurred while trying to keep the UI open: " + ex.getMessage());
+            }
         }
     }
 

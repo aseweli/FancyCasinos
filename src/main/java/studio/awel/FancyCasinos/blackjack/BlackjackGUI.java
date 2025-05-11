@@ -25,18 +25,18 @@ import static studio.awel.FancyCasinos.FancyCasinos.spiGUI;
 
 public class BlackjackGUI {
     private BlackjackGame game;
-    SGMenu menu;
+    private SGMenu menu;
     private final Player player;
     private final double bet;
     private final ConfigManager config;
+    private final Material CARD_MATERIAL = Material.PAPER;
 
     public BlackjackGUI(Player player, double bet, ConfigManager config) {
         this.player = player;
         this.bet = bet;
         this.config = config;
         this.game = new BlackjackGame();
-        this.menu = spiGUI.create(config.getConfig().blackjackMenuName().replace("{bet}", formatAmount(bet)), 5);
-
+        this.menu = spiGUI.create(ColorFormater.c(config.getConfig().blackjackMenuName().replace("{bet}", formatAmount(bet)) + ColorFormater.addIdentifier("b")), 5);
         setupGUI();
     }
 
@@ -44,16 +44,24 @@ public class BlackjackGUI {
         game.startGame(bet);
         updateUI();
         player.openInventory(menu.getInventory());
-        Gambling.indentPlayerGame(player, "Blackjack");
+        Gambling.indentPlayerGame(player, "[b]");
+        if (game.getPlayerHand().getValue() == 21) {
+            forcePlayerWin();
+            updateUI();
+            endGame();
+        }
     }
 
     private void setupGUI() {
-        int[] borderSlots = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 27, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44};
-        setSlot(borderSlots, menu, Material.BLACK_STAINED_GLASS_PANE, " ", "", event -> {});
-
+        setupBorder();
         updatePlayerInfo();
         updateDealerInfo();
         setupActionButtons();
+    }
+
+    private void setupBorder() {
+        int[] borderSlots = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 27, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44};
+        setSlot(borderSlots, menu, Material.BLACK_STAINED_GLASS_PANE, " ", "", event -> {});
     }
 
     private void updateUI() {
@@ -120,16 +128,18 @@ public class BlackjackGUI {
     }
 
     private void setupActionButtons() {
-        setSlot(new int[]{20}, menu, config.getConfig().blackjackHitItem(),
+        // Hit button
+        createActionButton(20,
+                config.getConfig().blackjackHitItem(),
                 config.getConfig().blackjackHitName(),
                 config.getConfig().blackjackHitLore(),
                 event -> {
+                    PlaySounds.sound(player, "click");
                     if (!game.isGameEnded()) {
                         Card card = game.playerHit();
                         if (card != null) {
                             updateUI();
-                            if (game.getPlayerHand().getValue() == 21 ||
-                                    (game.getPlayerHand().getCards().size() >= 5 && game.getPlayerHand().getValue() <= 21)) {
+                            if ((game.getPlayerHand().getCards().size() >= 5 && game.getPlayerHand().getValue() <= 21)) {
                                 forcePlayerWin();
                                 updateUI();
                                 endGame();
@@ -137,24 +147,46 @@ public class BlackjackGUI {
                                 endGame();
                             }
                         }
+                    } else {
+                        player.closeInventory();
                     }
                 });
 
-        setSlot(new int[]{21}, menu, config.getConfig().blackjackStandItem(),
+        // Stand button
+        createActionButton(21,
+                config.getConfig().blackjackStandItem(),
                 config.getConfig().blackjackStandName(),
                 config.getConfig().blackjackStandLore(),
                 event -> {
+                    PlaySounds.sound(player, "click");
                     if (!game.isGameEnded()) {
                         game.playerStand();
                         updateUI();
                         endGame();
+                    } else {
+                        player.closeInventory();
                     }
                 });
 
-        setSlot(new int[]{24}, menu, config.getConfig().blackjackInfoItem(),
+        // Info button
+        createActionButton(24,
+                config.getConfig().blackjackInfoItem(),
                 config.getConfig().blackjackInfoName(),
                 config.getConfig().blackjackInfoLore(),
-                event -> {});
+                event -> PlaySounds.sound(player, "click"));
+    }
+
+    private void createActionButton(int slot, Material material, String name, String lore, Consumer<InventoryClickEvent> listener) {
+        String[] loreArray = ColorFormater.c(lore).split("</nl>");
+        ItemBuilder item = new ItemBuilder(material)
+                .name(ColorFormater.c(name))
+                .lore(loreArray)
+                .amount(1)
+                .flag(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
+
+        SGButton button = new SGButton(item.build());
+        button.withListener(event -> listener.accept(event));
+        menu.setButton(slot, button);
     }
 
     private void setCardItem(int slot, Card card, boolean faceDown) {
@@ -167,35 +199,24 @@ public class BlackjackGUI {
             name = config.getConfig().blackjackFacedownName();
             lore = config.getConfig().blackjackFacedownLore();
         } else {
-            material = getCardMaterial(card);
+            material = CARD_MATERIAL;
             name = config.getConfig().blackjackCardName()
                     .replace("{rank}", card.getRank())
                     .replace("{suit}", card.getSuit());
-            lore = config.getConfig().blackjackCardLore()
-                    .replace("{value}", String.valueOf(card.getValue()));
+            if (card.getRank().equals("Ace")) {
+                lore = config.getConfig().blackjackCardLore()
+                        .replace("{value}", "1 or 11");
+            } else {
+                lore = config.getConfig().blackjackCardLore()
+                        .replace("{value}", String.valueOf(card.getValue()));
+            }
         }
 
         setSlot(new int[]{slot}, menu, material, name, lore, event -> {});
     }
 
-    private Material getCardMaterial(Card card) {
-        switch (card.getSuit()) {
-            case "Hearts":
-                return Material.PAPER;
-            case "Diamonds":
-                return Material.PAPER;
-            case "Clubs":
-                return Material.PAPER;
-            case "Spades":
-                return Material.PAPER;
-            default:
-                return Material.PAPER;
-        }
-    }
-
     public void setSlot(int[] slots, SGMenu menu, Material material, String name, String lore, Consumer<InventoryClickEvent> listener) {
-        lore = ColorFormater.c(lore);
-        String[] result = lore.split("</nl>");
+        String[] result = ColorFormater.c(lore).split("</nl>");
         for (int slot : slots) {
             ItemBuilder item = new ItemBuilder(material)
                     .name(ColorFormater.c(name))
@@ -203,51 +224,13 @@ public class BlackjackGUI {
                     .amount(1)
                     .flag(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE);
             SGButton button = new SGButton(item.build());
-            menu.setButton(slot, button);
             button.withListener(event -> listener.accept(event));
+            menu.setButton(slot, button);
         }
     }
 
     private void forcePlayerWin() {
         game = new ForceWinBlackjackGame(game);
-    }
-
-    class ForceWinBlackjackGame extends BlackjackGame {
-        private final BlackjackGame originalGame;
-
-        public ForceWinBlackjackGame(BlackjackGame originalGame) {
-            this.originalGame = originalGame;
-        }
-
-        @Override
-        public GameResult getGameResult() {
-            return new GameResult(bjMath.ResultType.PLAYER_WIN, originalGame.getBet());
-        }
-
-        @Override
-        public Hand getPlayerHand() {
-            return originalGame.getPlayerHand();
-        }
-
-        @Override
-        public Hand getDealerHand() {
-            return originalGame.getDealerHand();
-        }
-
-        @Override
-        public Card getVisibleDealerCard() {
-            return originalGame.getVisibleDealerCard();
-        }
-
-        @Override
-        public double getBet() {
-            return originalGame.getBet();
-        }
-
-        @Override
-        public boolean isGameEnded() {
-            return true;
-        }
     }
 
     private void endGame() {
@@ -306,6 +289,8 @@ public class BlackjackGUI {
                     resultLore = "&7Result: Unknown";
             }
 
+            Gambling.endPlayerGame(player);
+
             ItemStack resultItem = new ItemStack(resultMaterial);
             ItemMeta resultMeta = resultItem.getItemMeta();
             resultMeta.setDisplayName(ColorFormater.c(resultName));
@@ -313,8 +298,16 @@ public class BlackjackGUI {
             resultMeta.setLore(Arrays.asList(loreArray));
             resultItem.setItemMeta(resultMeta);
 
-            menu.setButton(22, new SGButton(resultItem));
-            Gambling.endPlayerGame(player);
+            SGButton resultButton = new SGButton(resultItem);
+            resultButton.withListener(event -> {
+                PlaySounds.sound(player, "click");
+                player.closeInventory();
+            });
+
+            SGButton air = new SGButton(new ItemStack(Material.AIR));
+            menu.setButton(22, resultButton);
+            menu.setButton(20, air);
+            menu.setButton(21, air);
             menu.refreshInventory(player);
         }
     }
@@ -335,5 +328,48 @@ public class BlackjackGUI {
         }
 
         return df.format(value) + suffix[index];
+    }
+
+    private static class ForceWinBlackjackGame extends BlackjackGame {
+        private final BlackjackGame originalGame;
+
+        public ForceWinBlackjackGame(BlackjackGame originalGame) {
+            this.originalGame = originalGame;
+        }
+
+        @Override
+        public GameResult getGameResult() {
+            if (originalGame.getPlayerHand().getValue() == 21 &&
+                    originalGame.getPlayerHand().getCards().size() == 2) {
+                return new GameResult(bjMath.ResultType.PLAYER_BLACKJACK, originalGame.getBet() * 1.5);
+            } else {
+                return new GameResult(bjMath.ResultType.PLAYER_WIN, originalGame.getBet());
+            }
+        }
+
+        @Override
+        public Hand getPlayerHand() {
+            return originalGame.getPlayerHand();
+        }
+
+        @Override
+        public Hand getDealerHand() {
+            return originalGame.getDealerHand();
+        }
+
+        @Override
+        public Card getVisibleDealerCard() {
+            return originalGame.getVisibleDealerCard();
+        }
+
+        @Override
+        public double getBet() {
+            return originalGame.getBet();
+        }
+
+        @Override
+        public boolean isGameEnded() {
+            return true;
+        }
     }
 }

@@ -15,14 +15,14 @@ public interface PrimaryConfig {
     @ConfComments("The editable attributes for the primary casino UI")
     @ConfKey("gui.name")
     @AnnotationBasedSorter.Order(1)
-    @ConfDefault.DefaultString("<#fcba03>✦ <#fcd303>Fancy <#fcee03>Casino <#fcba03>✦")
+    @ConfDefault.DefaultString("<#fcba03>ꜰᴀɴᴄʏ ᴄᴀꜱɪɴᴏ")
     String guiName();
 
     @ConfComments({"The layout of your ui written in this file is how it will show in the menu", "With the \"-\" being your blank object. The \"s\" is for slots, \"c\" for crash", "\"m\" for mines, \"b\" for black jack and, \"x\" for exit."
             , " ", "Ensure that it is formatted correctly, with 9 characters per line and, between 1 and 6 lines."})
     @ConfKey("gui.layout.ui")
     @AnnotationBasedSorter.Order(1)
-    @ConfDefault.DefaultString("---------\n-s-c-m-b-\n---------")
+    @ConfDefault.DefaultString("---------\n-s~c~m~b-\n---------")
     String guiLayout();
 
     @ConfComments({"The blank object is the default object for your menu \"AIR\" is an example", "Ensure that you use a valid minecraft item name while declaring items", "Failure to correctly define items will result in a loading error."})
@@ -42,7 +42,7 @@ public interface PrimaryConfig {
     @AnnotationBasedSorter.Order(2)
     @ConfDefault.DefaultStrings({
             "~:AIR:&f:No item here",
-            "v:KNOWLEDGE_BOOK:<#fcba03>✦ <#fcd303>Instructions <#fcba03>✦:&7» Click to see how to play</nl>&7» Have fun and gamble responsibly!"
+            "v:KNOWLEDGE_BOOK:<#fcba03>ɪɴꜱᴛʀᴜᴄᴛɪᴏɴꜱ:&f<#fcba03>❙ &fClick to see how to play</nl>&f<#fcba03>❙ &fHave fun and gamble responsibly!"
     })
     List<String> customItemDefinitions();
 
@@ -51,7 +51,7 @@ public interface PrimaryConfig {
     @ConfComments("Attributes of the slots item in the main menu")
     @ConfKey("gui.layout.slots.name")
     @AnnotationBasedSorter.Order(2)
-    @ConfDefault.DefaultString("<#ffd700>✧ <#ffe84d>SLOTS <#ffd700>✧")
+    @ConfDefault.DefaultString("<#ffd700>ꜱʟᴏᴛꜱ")
     String slotsName();
 
     @ConfKey("gui.layout.slots.item")
@@ -61,7 +61,7 @@ public interface PrimaryConfig {
 
     @ConfKey("gui.layout.slots.description")
     @AnnotationBasedSorter.Order(4)
-    @ConfDefault.DefaultString("&7» <#ffd700>Test your luck with our slot machines!</nl>&7» <#ffe84d>Match symbols to win big prizes!</nl>&7» <#ffd700>Current Jackpot: &f✦ MASSIVE ✦")
+    @ConfDefault.DefaultString("&f<#ffd700>❙ &fTest your <#ffd700>ʟᴜᴄᴋ &fwith our slot machines!</nl>&f<#ffd700>❙ &fMatch symbols to win <#ffd700>ʙɪɢ ᴘʀɪᴢᴇꜱ&f!</nl>&f<#ffd700>❙ &fCurrent Jackpot: <#ffd700>ᴍᴀꜱꜱɪᴠᴇ")
     String slotsDescription();
 
     // Mines
@@ -69,7 +69,7 @@ public interface PrimaryConfig {
     @ConfComments("Attributes of the mines item in the main menu")
     @ConfKey("gui.layout.mines.name")
     @AnnotationBasedSorter.Order(2)
-    @ConfDefault.DefaultString("<#ff5555>✦ <#ff7777>MINES <#ff5555>✦")
+    @ConfDefault.DefaultString("<#ff5555>ᴍɪɴᴇꜱ")
     String minesName();
 
     @ConfKey("gui.layout.mines.item")
@@ -79,7 +79,7 @@ public interface PrimaryConfig {
 
     @ConfKey("gui.layout.mines.description")
     @AnnotationBasedSorter.Order(4)
-    @ConfDefault.DefaultString("&7» <#ff5555>Navigate through a field of explosives!</nl>&7» <#ff7777>Every safe step increases your reward!</nl>&7» <#ff5555>How far will you go?")
+    @ConfDefault.DefaultString("&f<#ff5555>❙ &fNavigate through a field of <#ff5555>ᴇxᴘʟᴏꜱɪᴠᴇꜱ&f!</nl>&f<#ff5555>❙ &fEvery safe step increases your <#ff5555>ʀᴇᴡᴀʀᴅ&f!</nl>&f<#ff5555>❙ &fHow far will you go?")
     String minesDescription();
 
     // Crash
@@ -87,7 +87,7 @@ public interface PrimaryConfig {
     @ConfComments("Attributes of the crash item in the main menu")
     @ConfKey("gui.layout.crash.name")
     @AnnotationBasedSorter.Order(2)
-    @ConfDefault.DefaultString("<#5555ff>⚡ <#7777ff>CRASH <#5555ff>⚡")
+    @ConfDefault.DefaultString("<#5555ff>ᴄʀᴀꜱʜ")
     String crashName();
 
     @ConfKey("gui.layout.crash.item")
@@ -97,14 +97,14 @@ public interface PrimaryConfig {
 
     @ConfKey("gui.layout.crash.description")
     @AnnotationBasedSorter.Order(4)
-    @ConfDefault.DefaultString("&7» <#5555ff>Watch the multiplier rise!</nl>&7» <#7777ff>Cash out before it crashes!</nl>&7» <#5555ff>Quick reflexes = Big rewards!")
+    @ConfDefault.DefaultString("&f<#5555ff>❙ &fWatch the <#5555ff>ᴍᴜʟᴛɪᴘʟɪᴇʀ &frise!</nl>&f<#5555ff>❙ &fCash out before it <#5555ff>ᴄʀᴀꜱʜᴇꜱ&f!</nl>&f<#5555ff>❙ &fQuick reflexes = Big rewards!")
     String crashDescription();
 
     // Blackjack
     @ConfComments("Attributes of the blackjack item in the main menu")
     @ConfKey("gui.layout.blackjack.name")
     @AnnotationBasedSorter.Order(2)
-    @ConfDefault.DefaultString("<#55ff55>♠ <#77ff77>BLACKJACK <#55ff55>♠")
+    @ConfDefault.DefaultString("<#55ff55>ʙʟᴀᴄᴋᴊᴀᴄᴋ")
     String blackjackName();
 
     @ConfKey("gui.layout.blackjack.item")
@@ -114,7 +114,7 @@ public interface PrimaryConfig {
 
     @ConfKey("gui.layout.blackjack.description")
     @AnnotationBasedSorter.Order(4)
-    @ConfDefault.DefaultString("&7» <#55ff55>Test your card skills against the dealer!</nl>&7» <#77ff77>Hit 21 or get 5 cards to win instantly!</nl>&7» <#55ff55>Blackjack pays 3:2!")
+    @ConfDefault.DefaultString("&f<#55ff55>❙ &fTest your <#55ff55>ᴄᴀʀᴅ ꜱᴋɪʟʟꜱ &fagainst the dealer!</nl>&f<#55ff55>❙ &fHit 21 or get 5 cards to <#55ff55>ᴡɪɴ &finstantly!</nl>&f<#55ff55>❙ &fBlackjack pays 3:2!")
     String blackjackDescription();
 
     // Exit
@@ -122,7 +122,7 @@ public interface PrimaryConfig {
     @ConfComments("Attributes of the exit item in the main menu")
     @ConfKey("gui.layout.exit.name")
     @AnnotationBasedSorter.Order(2)
-    @ConfDefault.DefaultString("<#ff5555>✘ <#ff7777>EXIT <#ff5555>✘")
+    @ConfDefault.DefaultString("<#ff5555>ᴇxɪᴛ")
     String exitName();
 
     @ConfKey("gui.layout.exit.item")
@@ -132,26 +132,26 @@ public interface PrimaryConfig {
 
     @ConfKey("gui.layout.exit.description")
     @AnnotationBasedSorter.Order(4)
-    @ConfDefault.DefaultString("&7» Click to leave the casino")
+    @ConfDefault.DefaultString("&f<#ff5555>❙ &fClick to leave the casino")
     String exitDescription();
 
     @ConfComments("Setup for the mines menu")
 
     @ConfKey("mines.menu.name")
     @AnnotationBasedSorter.Order(10)
-    @ConfDefault.DefaultString("<#ff5555>✦ <#ff7777>Mines Challenge <#ff5555>✦")
+    @ConfDefault.DefaultString("<#ff5555>ᴍɪɴᴇꜱ ᴄʜᴀʟʟᴇɴɢᴇ")
     String minesMenuName();
 
     @ConfKey("mines.menu.select")
     @AnnotationBasedSorter.Order(11)
-    @ConfDefault.DefaultString("<#ff7777>Select your difficulty")
+    @ConfDefault.DefaultString("&fSelect your difficulty")
     String minesMenuSelect();
 
     // Tracker
 
     @ConfKey("mines.menu.tracker.name")
     @AnnotationBasedSorter.Order(12)
-    @ConfDefault.DefaultString("<#ffd700>✧ <#ffe84d>Claim ${amount} <#ffd700>✧")
+    @ConfDefault.DefaultString("<#ffd700>ᴄʟᴀɪᴍ ${amount}")
     String TrackerName();
 
     @ConfKey("mines.menu.tracker.item")
@@ -161,14 +161,14 @@ public interface PrimaryConfig {
 
     @ConfKey("mines.menu.tracker.lore")
     @AnnotationBasedSorter.Order(14)
-    @ConfDefault.DefaultString("&7» <#ffd700>Click to claim your hard-earned prize!</nl>&7» <#ffe84d>Cash out now or risk it all?")
+    @ConfDefault.DefaultString("&f<#ffd700>❙ &fClick to claim your <#ffd700>ʜᴀʀᴅ-ᴇᴀʀɴᴇᴅ ᴘʀɪᴢᴇ&f!</nl>&f<#ffd700>❙ &fCash out now or risk it all?")
     String TrackerLore();
 
     // Information
 
     @ConfKey("mines.menu.information.name")
     @AnnotationBasedSorter.Order(12)
-    @ConfDefault.DefaultString("<#5555ff>ℹ <#7777ff>Game Information <#5555ff>ℹ")
+    @ConfDefault.DefaultString("<#5555ff>ɢᴀᴍᴇ ɪɴꜰᴏʀᴍᴀᴛɪᴏɴ")
     String InformationName();
 
     @ConfKey("mines.menu.information.item")
@@ -178,14 +178,14 @@ public interface PrimaryConfig {
 
     @ConfKey("mines.menu.information.lore")
     @AnnotationBasedSorter.Order(14)
-    @ConfDefault.DefaultString("&7» <#5555ff>Avoid the bombs and find treasures!</nl>&7» <#7777ff>Each safe tile increases your multiplier!</nl>&7» <#5555ff>Claim anytime or push your luck!")
+    @ConfDefault.DefaultString("&f<#5555ff>❙ &fAvoid the bombs and find <#5555ff>ᴛʀᴇᴀꜱᴜʀᴇꜱ&f!</nl>&f<#5555ff>❙ &fEach safe tile increases your <#5555ff>ᴍᴜʟᴛɪᴘʟɪᴇʀ&f!</nl>&f<#5555ff>❙ &fClaim anytime or push your luck!")
     String InformationLore();
 
     // Counter
 
     @ConfKey("mines.menu.counter.bombs.name")
     @AnnotationBasedSorter.Order(12)
-    @ConfDefault.DefaultString("<#ff5555>⚠ <#ff7777>Bombs: {amount} <#ff5555>⚠")
+    @ConfDefault.DefaultString("<#ff5555>☢ ʙᴏᴍʙꜱ: {amount}")
     String BombCounterName();
 
     @ConfKey("mines.menu.counter.bombs.item")
@@ -195,14 +195,14 @@ public interface PrimaryConfig {
 
     @ConfKey("mines.menu.counter.bombs.lore")
     @AnnotationBasedSorter.Order(14)
-    @ConfDefault.DefaultString("&7» <#ff5555>Watch out for {amount} hidden bombs!</nl>&7» <#ff7777>One wrong move and BOOM!")
+    @ConfDefault.DefaultString("&f<#ff5555>❙ &fWatch out for {amount} hidden <#ff5555>ʙᴏᴍʙꜱ&f!</nl>&f<#ff5555>❙ &fOne wrong move and BOOM!")
     String BombCounterLore();
 
     // Counter
 
     @ConfKey("mines.menu.counter.safe.name")
     @AnnotationBasedSorter.Order(12)
-    @ConfDefault.DefaultString("<#55ff55>✓ <#77ff77>Safe Tiles: {amount} <#55ff55>✓")
+    @ConfDefault.DefaultString("<#55ff55>✓ ꜱᴀꜰᴇ ᴛɪʟᴇꜱ: {amount}")
     String SafeCounterName();
 
     @ConfKey("mines.menu.counter.safe.item")
@@ -212,7 +212,7 @@ public interface PrimaryConfig {
 
     @ConfKey("mines.menu.counter.safe.lore")
     @AnnotationBasedSorter.Order(14)
-    @ConfDefault.DefaultString("&7» <#55ff55>{amount} safe tiles remaining!</nl>&7» <#77ff77>Find them all for maximum reward!")
+    @ConfDefault.DefaultString("&f<#55ff55>❙ &f{amount} <#55ff55>ꜱᴀꜰᴇ ᴛɪʟᴇꜱ &fremaining!</nl>&f<#55ff55>❙ &fFind them all for maximum reward!")
     String SafeCounterLore();
 
 
@@ -220,12 +220,12 @@ public interface PrimaryConfig {
 
     @ConfKey("mines.menu.bombs.one.name")
     @AnnotationBasedSorter.Order(22)
-    @ConfDefault.DefaultString("<#55ff55>✧ <#77ff77>1 Bomb <#55ff55>✧")
+    @ConfDefault.DefaultString("<#55ff55>1 ʙᴏᴍʙ")
     String minesOneName();
 
     @ConfKey("mines.menu.bombs.one.multiplier")
     @AnnotationBasedSorter.Order(23)
-    @ConfDefault.DefaultDouble(1.05)
+    @ConfDefault.DefaultDouble(1.01)
     double minesOneMultiplier();
 
     @ConfKey("mines.menu.bombs.one.item")
@@ -237,12 +237,12 @@ public interface PrimaryConfig {
 
     @ConfKey("mines.menu.bombs.two.name")
     @AnnotationBasedSorter.Order(22)
-    @ConfDefault.DefaultString("<#ffaa00>✧ <#ffcc00>2 Bombs <#ffaa00>✧")
+    @ConfDefault.DefaultString("<#ffaa00>2 ʙᴏᴍʙꜱ")
     String minesTwoName();
 
     @ConfKey("mines.menu.bombs.two.multiplier")
     @AnnotationBasedSorter.Order(23)
-    @ConfDefault.DefaultDouble(1.007)
+    @ConfDefault.DefaultDouble(1.02)
     double minesTwoMultiplier();
 
     @ConfKey("mines.menu.bombs.two.item")
@@ -254,12 +254,12 @@ public interface PrimaryConfig {
 
     @ConfKey("mines.menu.bombs.three.name")
     @AnnotationBasedSorter.Order(22)
-    @ConfDefault.DefaultString("<#ff7700>✧ <#ff9900>3 Bombs <#ff7700>✧")
+    @ConfDefault.DefaultString("<#ff7700>3 ʙᴏᴍʙꜱ")
     String minesThreeName();
 
     @ConfKey("mines.menu.bombs.three.multiplier")
     @AnnotationBasedSorter.Order(23)
-    @ConfDefault.DefaultDouble(1.01)
+    @ConfDefault.DefaultDouble(1.03)
     double minesThreeMultiplier();
 
     @ConfKey("mines.menu.bombs.three.item")
@@ -271,12 +271,12 @@ public interface PrimaryConfig {
 
     @ConfKey("mines.menu.bombs.four.name")
     @AnnotationBasedSorter.Order(22)
-    @ConfDefault.DefaultString("<#ff0000>✧ <#ff5555>4 Bombs <#ff0000>✧")
+    @ConfDefault.DefaultString("<#ff0000>4 ʙᴏᴍʙꜱ")
     String minesFourName();
 
     @ConfKey("mines.menu.bombs.four.multiplier")
     @AnnotationBasedSorter.Order(23)
-    @ConfDefault.DefaultDouble(1.013)
+    @ConfDefault.DefaultDouble(1.05)
     double minesFourMultiplier();
 
     @ConfKey("mines.menu.bombs.four.item")
@@ -290,13 +290,13 @@ public interface PrimaryConfig {
     @ConfComments("Setup for the blackjack menu")
     @ConfKey("blackjack.menu.name")
     @AnnotationBasedSorter.Order(30)
-    @ConfDefault.DefaultString("<#55ff55>♠ <#77ff77>Blackjack <#55ff55>♠ <#ffffff>Bet: ${bet}")
+    @ConfDefault.DefaultString("<#55ff55>ʙʟᴀᴄᴋᴊᴀᴄᴋ &f• Bet: ${bet}")
     String blackjackMenuName();
 
     // Player info
     @ConfKey("blackjack.menu.player.name")
     @AnnotationBasedSorter.Order(31)
-    @ConfDefault.DefaultString("<#55ff55>♣ <#77ff77>Your Hand: {score} <#55ff55>♣")
+    @ConfDefault.DefaultString("<#55ff55>ʏᴏᴜʀ ʜᴀɴᴅ: {score}")
     String blackjackPlayerName();
 
     @ConfKey("blackjack.menu.player.item")
@@ -306,13 +306,13 @@ public interface PrimaryConfig {
 
     @ConfKey("blackjack.menu.player.lore")
     @AnnotationBasedSorter.Order(33)
-    @ConfDefault.DefaultString("&7» <#ffd700>Your bet: ${bet}</nl>&7» <#ffffff>Click cards to see details</nl>&7» <#77ff77>Hit 21 or get 5 cards to win instantly!")
+    @ConfDefault.DefaultString("&f<#55ff55>❙ &fYour bet: ${bet}</nl>&f<#55ff55>❙ &fClick cards to see details</nl>&f<#55ff55>❙ &fHit 21 or get 5 cards to <#55ff55>ᴡɪɴ &finstantly!")
     String blackjackPlayerLore();
 
     // Dealer info
     @ConfKey("blackjack.menu.dealer.name")
     @AnnotationBasedSorter.Order(34)
-    @ConfDefault.DefaultString("<#ff5555>♦ <#ff7777>Dealer's Hand: {score} <#ff5555>♦")
+    @ConfDefault.DefaultString("<#ff5555>ᴅᴇᴀʟᴇʀ'ꜱ ʜᴀɴᴅ: {score}")
     String blackjackDealerName();
 
     @ConfKey("blackjack.menu.dealer.item")
@@ -322,64 +322,64 @@ public interface PrimaryConfig {
 
     @ConfKey("blackjack.menu.dealer.lore")
     @AnnotationBasedSorter.Order(36)
-    @ConfDefault.DefaultString("&7» <#ff7777>Dealer must stand on 17+</nl>&7» <#ff5555>Dealer must draw on 16 or less")
+    @ConfDefault.DefaultString("&f<#ff5555>❙ &fDealer must <#ff5555>ꜱᴛᴀɴᴅ &fon 17+</nl>&f<#ff5555>❙ &fDealer must <#ff5555>ᴅʀᴀᴡ &fon 16 or less")
     String blackjackDealerLore();
 
     // Card display
     @ConfKey("blackjack.menu.card.name")
     @AnnotationBasedSorter.Order(37)
-    @ConfDefault.DefaultString("<#ffffff>{rank} of <#55aaff>{suit}")
+    @ConfDefault.DefaultString("&f{rank} of <#5555ff>{suit}")
     String blackjackCardName();
 
     @ConfKey("blackjack.menu.card.lore")
     @AnnotationBasedSorter.Order(38)
-    @ConfDefault.DefaultString("&7» Card Value: <#ffffff>{value}")
+    @ConfDefault.DefaultString("&f<#5555ff>❙ &fCard Value: {value}")
     String blackjackCardLore();
 
     @ConfKey("blackjack.menu.card.facedown.name")
     @AnnotationBasedSorter.Order(39)
-    @ConfDefault.DefaultString("<#888888>? Mystery Card ?")
+    @ConfDefault.DefaultString("&8? ᴍʏꜱᴛᴇʀʏ ᴄᴀʀᴅ ?")
     String blackjackFacedownName();
 
     @ConfKey("blackjack.menu.card.facedown.lore")
     @AnnotationBasedSorter.Order(40)
-    @ConfDefault.DefaultString("&7» <#888888>The dealer's hidden card</nl>&7» <#aaaaaa>What could it be?")
+    @ConfDefault.DefaultString("&f<#5555ff>❙ &fThe dealer's hidden card</nl>&f<#5555ff>❙ &fWhat could it be?")
     String blackjackFacedownLore();
 
     // Button texts
     @ConfKey("blackjack.menu.buttons.hit.name")
     @AnnotationBasedSorter.Order(41)
-    @ConfDefault.DefaultString("<#55ff55>✦ <#77ff77>HIT <#55ff55>✦")
+    @ConfDefault.DefaultString("<#55ff55>ʜɪᴛ")
     String blackjackHitName();
 
     @ConfKey("blackjack.menu.buttons.hit.item")
     @AnnotationBasedSorter.Order(42)
-    @ConfDefault.DefaultString("LIME_CONCRETE")
+    @ConfDefault.DefaultString("LIME_CANDLE")
     Material blackjackHitItem();
 
     @ConfKey("blackjack.menu.buttons.hit.lore")
     @AnnotationBasedSorter.Order(43)
-    @ConfDefault.DefaultString("&7» <#55ff55>Draw another card</nl>&7» <#77ff77>Feeling lucky?")
+    @ConfDefault.DefaultString("&f<#55ff55>❙ &fDraw another <#55ff55>ᴄᴀʀᴅ&f</nl>&f<#55ff55>❙ &fFeeling lucky?")
     String blackjackHitLore();
 
     @ConfKey("blackjack.menu.buttons.stand.name")
     @AnnotationBasedSorter.Order(44)
-    @ConfDefault.DefaultString("<#ff5555>✦ <#ff7777>STAND <#ff5555>✦")
+    @ConfDefault.DefaultString("<#ff5555>ꜱᴛᴀɴᴅ")
     String blackjackStandName();
 
     @ConfKey("blackjack.menu.buttons.stand.item")
     @AnnotationBasedSorter.Order(45)
-    @ConfDefault.DefaultString("RED_CONCRETE")
+    @ConfDefault.DefaultString("RED_CANDLE")
     Material blackjackStandItem();
 
     @ConfKey("blackjack.menu.buttons.stand.lore")
     @AnnotationBasedSorter.Order(46)
-    @ConfDefault.DefaultString("&7» <#ff5555>Keep your current hand</nl>&7» <#ff7777>Let the dealer play")
+    @ConfDefault.DefaultString("&f<#ff5555>❙ &fKeep your current <#ff5555>ʜᴀɴᴅ&f</nl>&f<#ff5555>❙ &fLet the dealer play")
     String blackjackStandLore();
 
     @ConfKey("blackjack.menu.buttons.info.name")
     @AnnotationBasedSorter.Order(47)
-    @ConfDefault.DefaultString("<#5555ff>ℹ <#7777ff>GAME RULES <#5555ff>ℹ")
+    @ConfDefault.DefaultString("<#5555ff>ɢᴀᴍᴇ ʀᴜʟᴇꜱ")
     String blackjackInfoName();
 
     @ConfKey("blackjack.menu.buttons.info.item")
@@ -389,12 +389,12 @@ public interface PrimaryConfig {
 
     @ConfKey("blackjack.menu.buttons.info.lore")
     @AnnotationBasedSorter.Order(49)
-    @ConfDefault.DefaultString("&7» <#5555ff>Blackjack pays 3:2</nl>&7» <#7777ff>Dealer stands on 17+</nl>&7» <#5555ff>Five Card Charlie wins automatically!</nl>&7» <#7777ff>Hit 21 to win instantly!")
+    @ConfDefault.DefaultString("&f<#5555ff>❙ &fBlackjack pays <#5555ff>3:2&f</nl>&f<#5555ff>❙ &fDealer stands on <#5555ff>17+&f</nl>&f<#5555ff>❙ &fFive Card Charlie wins <#5555ff>ᴀᴜᴛᴏᴍᴀᴛɪᴄᴀʟʟʏ&f!</nl>&f<#5555ff>❙ &fHit 21 to win instantly!")
     String blackjackInfoLore();
 
     @ConfKey("blackjack.menu.buttons.playagain.name")
     @AnnotationBasedSorter.Order(50)
-    @ConfDefault.DefaultString("<#55ff55>⟳ <#77ff77>PLAY AGAIN <#55ff55>⟳")
+    @ConfDefault.DefaultString("<#55ff55>ᴘʟᴀʏ ᴀɢᴀɪɴ")
     String blackjackPlayAgainName();
 
     @ConfKey("blackjack.menu.buttons.playagain.item")
@@ -404,13 +404,13 @@ public interface PrimaryConfig {
 
     @ConfKey("blackjack.menu.buttons.playagain.lore")
     @AnnotationBasedSorter.Order(52)
-    @ConfDefault.DefaultString("&7» <#55ff55>Start a new round</nl>&7» <#77ff77>Same bet amount")
+    @ConfDefault.DefaultString("&f<#55ff55>❙ &fStart a <#55ff55>ɴᴇᴡ ʀᴏᴜɴᴅ&f</nl>&f<#55ff55>❙ &fSame bet amount")
     String blackjackPlayAgainLore();
 
     // Results
     @ConfKey("blackjack.menu.results.blackjack.name")
     @AnnotationBasedSorter.Order(53)
-    @ConfDefault.DefaultString("<#ffd700>✦ <#ffe84d>BLACKJACK! <#ffd700>✦")
+    @ConfDefault.DefaultString("<#ffd700>ʙʟᴀᴄᴋᴊᴀᴄᴋ!")
     String blackjackResultBlackjackName();
 
     @ConfKey("blackjack.menu.results.blackjack.item")
@@ -420,12 +420,12 @@ public interface PrimaryConfig {
 
     @ConfKey("blackjack.menu.results.blackjack.lore")
     @AnnotationBasedSorter.Order(55)
-    @ConfDefault.DefaultString("&7» <#ffd700>Perfect 21! You win <#ffffff>${amount}</nl>&7» <#ffe84d>Blackjack pays 3:2!")
+    @ConfDefault.DefaultString("&f<#ffd700>❙ &fPerfect 21! You win <#ffd700>${amount}&f</nl>&f<#ffd700>❙ &fBlackjack pays 3:2!")
     String blackjackResultBlackjackLore();
 
     @ConfKey("blackjack.menu.results.player-win.name")
     @AnnotationBasedSorter.Order(56)
-    @ConfDefault.DefaultString("<#55ff55>✓ <#77ff77>YOU WIN! <#55ff55>✓")
+    @ConfDefault.DefaultString("<#55ff55>ʏᴏᴜ ᴡɪɴ!")
     String blackjackResultPlayerWinName();
 
     @ConfKey("blackjack.menu.results.player-win.item")
@@ -435,12 +435,12 @@ public interface PrimaryConfig {
 
     @ConfKey("blackjack.menu.results.player-win.lore")
     @AnnotationBasedSorter.Order(58)
-    @ConfDefault.DefaultString("&7» <#55ff55>Congratulations! You win <#ffffff>${amount}</nl>&7» <#77ff77>Better hand than the dealer!")
+    @ConfDefault.DefaultString("&f<#55ff55>❙ &fCongratulations! You win <#55ff55>${amount}&f</nl>&f<#55ff55>❙ &fBetter hand than the dealer!")
     String blackjackResultPlayerWinLore();
 
     @ConfKey("blackjack.menu.results.dealer-bust.name")
     @AnnotationBasedSorter.Order(59)
-    @ConfDefault.DefaultString("<#55ff55>✓ <#77ff77>DEALER BUST! <#55ff55>✓")
+    @ConfDefault.DefaultString("<#55ff55>ᴅᴇᴀʟᴇʀ ʙᴜꜱᴛ!")
     String blackjackResultDealerBustName();
 
     @ConfKey("blackjack.menu.results.dealer-bust.item")
@@ -450,12 +450,12 @@ public interface PrimaryConfig {
 
     @ConfKey("blackjack.menu.results.dealer-bust.lore")
     @AnnotationBasedSorter.Order(61)
-    @ConfDefault.DefaultString("&7» <#55ff55>Dealer went over 21! You win <#ffffff>${amount}</nl>&7» <#77ff77>The house loses this time!")
+    @ConfDefault.DefaultString("&f<#55ff55>❙ &fDealer went over 21! You win <#55ff55>${amount}&f</nl>&f<#55ff55>❙ &fThe house loses this time!")
     String blackjackResultDealerBustLore();
 
     @ConfKey("blackjack.menu.results.push.name")
     @AnnotationBasedSorter.Order(62)
-    @ConfDefault.DefaultString("<#ffaa00>⟳ <#ffcc00>PUSH! <#ffaa00>⟳")
+    @ConfDefault.DefaultString("<#ffaa00>ᴘᴜꜱʜ!")
     String blackjackResultPushName();
 
     @ConfKey("blackjack.menu.results.push.item")
@@ -465,12 +465,12 @@ public interface PrimaryConfig {
 
     @ConfKey("blackjack.menu.results.push.lore")
     @AnnotationBasedSorter.Order(64)
-    @ConfDefault.DefaultString("&7» <#ffaa00>It's a tie! Your bet of <#ffffff>${amount}</nl>&7» <#ffcc00>has been returned to you")
+    @ConfDefault.DefaultString("&f<#ffaa00>❙ &fIt's a tie! Your bet of <#ffaa00>${amount}&f</nl>&f<#ffaa00>❙ &fhas been returned to you")
     String blackjackResultPushLore();
 
     @ConfKey("blackjack.menu.results.player-bust.name")
     @AnnotationBasedSorter.Order(65)
-    @ConfDefault.DefaultString("<#ff5555>✗ <#ff7777>BUST! <#ff5555>✗")
+    @ConfDefault.DefaultString("<#ff5555>ʙᴜꜱᴛ!")
     String blackjackResultPlayerBustName();
 
     @ConfKey("blackjack.menu.results.player-bust.item")
@@ -480,12 +480,12 @@ public interface PrimaryConfig {
 
     @ConfKey("blackjack.menu.results.player-bust.lore")
     @AnnotationBasedSorter.Order(67)
-    @ConfDefault.DefaultString("&7» <#ff5555>You went over 21! You lost <#ffffff>${amount}</nl>&7» <#ff7777>Better luck next time!")
+    @ConfDefault.DefaultString("&f<#ff5555>❙ &fYou went over 21! You lost <#ff5555>${amount}&f</nl>&f<#ff5555>❙ &fBetter luck next time!")
     String blackjackResultPlayerBustLore();
 
     @ConfKey("blackjack.menu.results.dealer-win.name")
     @AnnotationBasedSorter.Order(68)
-    @ConfDefault.DefaultString("<#ff5555>✗ <#ff7777>DEALER WINS! <#ff5555>✗")
+    @ConfDefault.DefaultString("<#ff5555>ᴅᴇᴀʟᴇʀ ᴡɪɴꜱ!")
     String blackjackResultDealerWinName();
 
     @ConfKey("blackjack.menu.results.dealer-win.item")
@@ -495,6 +495,6 @@ public interface PrimaryConfig {
 
     @ConfKey("blackjack.menu.results.dealer-win.lore")
     @AnnotationBasedSorter.Order(70)
-    @ConfDefault.DefaultString("&7» <#ff5555>Dealer has a better hand! You lost <#ffffff>${amount}</nl>&7» <#ff7777>The house always wins... eventually!")
+    @ConfDefault.DefaultString("&f<#ff5555>❙ &fDealer has a better hand! You lost <#ff5555>${amount}&f</nl>&f<#ff5555>❙ &fThe house always wins... eventually!")
     String blackjackResultDealerWinLore();
 }
