@@ -522,7 +522,7 @@ public interface PrimaryConfig {
 
     @ConfKey("messages.general.bet-timeout")
     @AnnotationBasedSorter.Order(104)
-    @ConfDefault.DefaultString("&c&lTime's Up! </nl>&fYou took too long to place your bet.")
+    @ConfDefault.DefaultString("&c&lTimed Out! </nl>&fYour casino session timed out.")
     String betTimeoutMessage();
 
     @ConfKey("messages.general.insufficient-funds")

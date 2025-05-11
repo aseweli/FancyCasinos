@@ -107,7 +107,7 @@ public class MainGUI {
             case 'b':
                 if (player.hasPermission("fancycasinos.blackjack")) {
                     handleGameBet(player, "Blackjack bet", amount ->
-                            new BlackjackGUI(player, amount, configManager).openGUI());
+                            new BlackjackGUI(player, amount, configManager, fancyCasinos).openGUI());
                 } else {
                     player.sendMessage(ColorFormater.c(configManager.getConfig().permissionDeniedMessage()));
                 }
@@ -128,7 +128,7 @@ public class MainGUI {
         MoneyUtil.typeInChat(player, prompt, 15L,
                 input -> {
                     try {
-                        double amount = Double.parseDouble(input);
+                        double amount = MoneyUtil.parseNumbers(input);
                         if (amount < MIN_BET_AMOUNT) {
                             displayTitleSafely(player, configManager.getConfig().invalidValueMessage());
                             return;

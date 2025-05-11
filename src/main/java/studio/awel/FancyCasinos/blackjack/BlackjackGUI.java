@@ -10,9 +10,12 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import studio.awel.FancyCasinos.FancyCasinos;
 import studio.awel.FancyCasinos.config.ConfigManager;
+import studio.awel.FancyCasinos.ui.MainGUI;
 import studio.awel.FancyCasinos.utilities.ColorFormater;
 import studio.awel.FancyCasinos.utilities.Gambling;
+import studio.awel.FancyCasinos.utilities.MoneyUtil;
 import studio.awel.FancyCasinos.utilities.awel.PlaySounds;
 import studio.awel.FancyCasinos.utilities.awel.bjMath;
 
@@ -30,12 +33,14 @@ public class BlackjackGUI {
     private final double bet;
     private final ConfigManager config;
     private final Material CARD_MATERIAL = Material.PAPER;
+    FancyCasinos fancyCasinos;
 
-    public BlackjackGUI(Player player, double bet, ConfigManager config) {
+    public BlackjackGUI(Player player, double bet, ConfigManager config, FancyCasinos fancyCasinos) {
         this.player = player;
         this.bet = bet;
         this.config = config;
         this.game = new BlackjackGame();
+        this.fancyCasinos = fancyCasinos;
         this.menu = spiGUI.create(ColorFormater.c(config.getConfig().blackjackMenuName().replace("{bet}", formatAmount(bet)) + ColorFormater.addIdentifier("b")), 5);
         setupGUI();
     }
@@ -239,6 +244,7 @@ public class BlackjackGUI {
             Material resultMaterial;
             String resultName;
             String resultLore;
+            //double bet = game.getBet();
 
             switch (result.getResult()) {
                 case PLAYER_BLACKJACK:
@@ -297,11 +303,15 @@ public class BlackjackGUI {
             String[] loreArray = ColorFormater.c(resultLore).split("</nl>");
             resultMeta.setLore(Arrays.asList(loreArray));
             resultItem.setItemMeta(resultMeta);
-
+            double winAmount = result.getWinAmount();
+            double bet = game.getBet();
+            if (winAmount > 0){
+                MoneyUtil.getInstance().deposit(player, winAmount + bet);
+            }
             SGButton resultButton = new SGButton(resultItem);
             resultButton.withListener(event -> {
                 PlaySounds.sound(player, "click");
-                player.closeInventory();
+                new MainGUI(config, fancyCasinos).openGUI(player);
             });
 
             SGButton air = new SGButton(new ItemStack(Material.AIR));

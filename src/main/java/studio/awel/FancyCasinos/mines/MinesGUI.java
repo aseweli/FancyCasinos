@@ -161,7 +161,7 @@ public class MinesGUI {
             double reward = gameState.amount * gameState.multiplier;
             gameState.totalPrize += reward;
             ItemStack newItem = createNamedItem(Material.GOLD_NUGGET,
-                    "&6+$" + formatNumberShort(reward, 2));
+                    "&6+$" + formatNumber(reward));
             secondMenu.setButton(slot, new SGButton(newItem));
             secondMenu.setName(ColorFormater.c(
                     String.format("%s (%.2fx)", manager.getConfig().minesMenuName(), gameState.currentMultiplier)
@@ -213,11 +213,11 @@ public class MinesGUI {
 
     public void updateTracker(Player player, Double prize) {
         String name = manager.getConfig().TrackerName()
-                .replace("{amount}", formatNumberShort(prize, 2));
+                .replace("{amount}", formatNumber(prize));
         String lore = manager.getConfig().TrackerLore()
-                .replace("{amount}", formatNumberShort(prize, 2));
+                .replace("{amount}", formatNumber(prize));
 
-        //IMPORTANT: GO BACK TO HERE
+        //IMPORTANT: GO BACK TO HERE LATER
 
         SGButton button = createButton(manager.getConfig().TrackerItem(), name, lore, event -> {
             if (active) {
@@ -226,12 +226,11 @@ public class MinesGUI {
 
                 MoneyUtil.getInstance().deposit(player, prize);
                 PlaySounds.sound(player, "success");
-
-                //player.sendMessage("Claimed " + formatNumberShort(prize, 1) + "!");
                 active = false;
             } else {
-                new MainGUI(manager, plugin).openGUI(player);
+                PlaySounds.sound(player, "click");
             }
+            new MainGUI(manager, plugin).openGUI(player);
         });
 
         secondMenu.setButton(37, button);
@@ -263,29 +262,26 @@ public class MinesGUI {
         secondMenu.setButton(28, safeButton);
     }
 
-    public static String formatNumberShort(double amount, int decimals) {
-        String[] suffix = {"", "k", "m", "b", "t"};
-        int index = 0;
-        double value = amount;
+    public static String formatNumber(double value) {
+        if (value < 0) {
+            return "-" + formatNumber(-value);
+        }
 
-        while (value >= 1000 && index < suffix.length - 1) {
+        if (value < 1000) {
+            return String.format("%.2f", value).replaceAll("\\.0*$", "");
+        }
+
+        String[] suffixes = {"", "k", "m", "b", "t"};
+        int suffixIndex = 0;
+
+        while (value >= 1000 && suffixIndex < suffixes.length - 1) {
             value /= 1000;
-            index++;
+            suffixIndex++;
         }
-
-        String pattern = decimals <= 0 ? "#,##0" : "#,##0." + "0".repeat(decimals);
-        DecimalFormat df = new DecimalFormat(pattern);
-
-        if (decimals > 0 && value == (long) value) {
-            df = new DecimalFormat("#,##0");
-        }
-
-        return df.format(value) + suffix[index];
+        String formatted = String.format("%.2f", value).replaceAll("\\.0*$", "");
+        return formatted + suffixes[suffixIndex];
     }
 
-    public static String formatNumberShort(double amount) {
-        return formatNumberShort(amount, 1);
-    }
 
     private SGButton createButton(Material material, String name, String lore, Consumer<InventoryClickEvent> listener) {
         ItemBuilder builder = new ItemBuilder(material)

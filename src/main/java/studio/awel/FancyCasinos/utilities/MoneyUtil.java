@@ -81,7 +81,7 @@ public class MoneyUtil {
         }
 
         Map<String, Double> multi = new HashMap<>();
-        multi.put("k", 10000.0);
+        multi.put("k", 1000.0);
         multi.put("m", 1000000.0);
         multi.put("b", 1000000000.0);
         multi.put("t", 1000000000000.0);
