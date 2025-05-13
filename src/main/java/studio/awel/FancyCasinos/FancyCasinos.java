@@ -73,7 +73,6 @@ public final class FancyCasinos extends JavaPlugin {
 
     public void registerCommands(){
          commandManager.registerCommand(new CasinoCommand(configManager));
-        commandManager.registerCommand(new SlotsCommand());
 
     }
 }
