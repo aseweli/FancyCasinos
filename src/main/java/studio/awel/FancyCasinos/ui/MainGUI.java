@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemFlag;
 import studio.awel.FancyCasinos.FancyCasinos;
 import studio.awel.FancyCasinos.blackjack.BlackjackGUI;
 import studio.awel.FancyCasinos.config.ConfigManager;
-import studio.awel.FancyCasinos.crash.CrashGUI;
+import studio.awel.FancyCasinos.crash.*;
 import studio.awel.FancyCasinos.mines.MinesGUI;
 //import studio.awel.FancyCasinos.slots.SlotGUI;
 import studio.awel.FancyCasinos.utilities.MoneyUtil;
@@ -117,7 +117,22 @@ public class MainGUI {
 //                break;
             case 'c':
                 if (player.hasPermission("fancycasinos.crash")) {
-                    new CrashGUI(fancyCasinos, configManager).openGUI(player);
+                    CrashGame game = CrashMasterClass.getInstance().getCurrentGame();
+                    int secondsUntilStart = CrashMasterClass.getInstance().getRemainingSeconds();
+                    int leaderboardPage = 0; // Start at page 0
+
+// Find the player's bet (if any)
+                    double bet = 0.0;
+                    for (PlayerData pd : game.getPlayerSet()) {
+                        if (pd.getPlayer().getUniqueId().equals(player.getUniqueId())) {
+                            bet = pd.getBet();
+                            break;
+                        }
+                    }
+                    PlayerData playerData = new PlayerData(player, bet);
+
+// Open the GUI
+                    player.openInventory(CrashIntermissionGUI.create(player, game, playerData, leaderboardPage, secondsUntilStart));
                 } else {
                     player.sendMessage(ColorFormater.c(configManager.getConfig().permissionDeniedMessage()));
                 }
