@@ -25,10 +25,10 @@ public class CrashIntermissionGUI {
 
         // fill panes
         for (int slot : YELLOW_PANES) {
-            inv.setItem(slot, pane(Material.YELLOW_STAINED_GLASS_PANE, "§f"));
+            inv.setItem(slot, pane(Material.YELLOW_STAINED_GLASS_PANE, ""));
         }
         for (int slot : WHITE_PANES) {
-            inv.setItem(slot, pane(Material.WHITE_STAINED_GLASS_PANE, "§f"));
+            inv.setItem(slot, pane(Material.WHITE_STAINED_GLASS_PANE, ""));
         }
 
         // game status - 13
@@ -77,7 +77,7 @@ public class CrashIntermissionGUI {
         if (game.isPlayerInGame(viewer.getUniqueId())) {
             inv.setItem(40, leaveBarrier());
         } else {
-            inv.setItem(40, pane(Material.WHITE_STAINED_GLASS_PANE, "§f"));
+            inv.setItem(40, pane(Material.WHITE_STAINED_GLASS_PANE, ""));
         }
 
         return inv;
@@ -96,14 +96,14 @@ public class CrashIntermissionGUI {
     private static ItemStack gameStatusSign(CrashGame game, int secondsUntilStart) {
         ItemStack item = new ItemStack(Material.OAK_SIGN);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("§eGame Status");
+        meta.setDisplayName("Game Status");
         List<String> lore = new ArrayList<>();
-        lore.add("Game ID: §f" + game.getId());
-        lore.add("Status: §f" + game.getStatus());
-        lore.add("Odds: §f" + String.format("%.2f", game.getOdds()));
-        lore.add("Players: §f" + game.getPlayerCount());
+        lore.add("Game ID: " + game.getId());
+        lore.add("Status: " + game.getStatus());
+        lore.add("Odds: " + String.format("%.2f", game.getOdds()));
+        lore.add("Players: " + game.getPlayerCount());
         lore.add("Total Pot: $" + formatMoney(game.getTotalPot()));
-        lore.add("Time until start: §f" + formatTime(secondsUntilStart));
+        lore.add("Time until start: " + formatTime(secondsUntilStart));
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
@@ -140,7 +140,7 @@ public class CrashIntermissionGUI {
         switch (i) {
             case 0: mat = Material.LIGHT_BLUE_BUNDLE; color = "§b"; break;
             case 1: mat = Material.LIME_BUNDLE; color = ""; break;
-            default: mat = Material.BUNDLE; color = "§f"; break;
+            default: mat = Material.BUNDLE; color = ""; break;
         }
         ItemStack item = new ItemStack(mat);
         ItemMeta meta = item.getItemMeta();
@@ -148,6 +148,8 @@ public class CrashIntermissionGUI {
         List<String> lore = new ArrayList<>();
         lore.add("Amount: $" + formatMoney(entry.getBetAmount()));
         meta.setLore(lore);
+        // Add hide flags
+        meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES, org.bukkit.inventory.ItemFlag.HIDE_UNBREAKABLE);
         item.setItemMeta(meta);
         return item;
     }
@@ -157,9 +159,9 @@ public class CrashIntermissionGUI {
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         OfflinePlayer offline = Bukkit.getOfflinePlayer(entry.getPlayerUUID());
         meta.setOwningPlayer(offline);
-        meta.setDisplayName("§e" + offline.getName());
+        meta.setDisplayName("" + offline.getName());
         List<String> lore = new ArrayList<>();
-        lore.add("Multiplier: §f1.00x (+$0.00)");
+        lore.add("Multiplier: 1.00x (+$0.00)");
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
@@ -171,7 +173,7 @@ public class CrashIntermissionGUI {
         switch (i) {
             case 0: mat = Material.LIGHT_BLUE_BUNDLE; color = "§b"; break;
             case 1: mat = Material.LIME_BUNDLE; color = ""; break;
-            default: mat = Material.BUNDLE; color = "§f"; break;
+            default: mat = Material.BUNDLE; color = ""; break;
         }
         ItemStack item = new ItemStack(mat);
         ItemMeta meta = item.getItemMeta();
@@ -179,6 +181,8 @@ public class CrashIntermissionGUI {
         List<String> lore = new ArrayList<>();
         lore.add("No bet yet.");
         meta.setLore(lore);
+        // Add hide flags
+        meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES, org.bukkit.inventory.ItemFlag.HIDE_UNBREAKABLE);
         item.setItemMeta(meta);
         return item;
     }
@@ -188,7 +192,7 @@ public class CrashIntermissionGUI {
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         meta.setDisplayName("No player");
         List<String> lore = new ArrayList<>();
-        lore.add("Multiplier: §f1.00x (+$0.00)");
+        lore.add("Multiplier: 1.00x (+$0.00)");
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
@@ -199,7 +203,7 @@ public class CrashIntermissionGUI {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
         List<String> lore = new ArrayList<>();
-        lore.add("Page: §f" + page);
+        lore.add("Page: " + page);
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
@@ -210,7 +214,7 @@ public class CrashIntermissionGUI {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("" + name);
         List<String> lore = new ArrayList<>();
-        lore.add("Time left: §f" + formatTime(seconds));
+        lore.add("Time left: " + formatTime(seconds));
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
