@@ -1,15 +1,11 @@
 package studio.awel.FancyCasinos.crash;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import studio.awel.FancyCasinos.FancyCasinos;
 import studio.awel.FancyCasinos.config.ConfigManager;
-import studio.awel.FancyCasinos.utilities.MoneyUtil;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Consumer;
 
 public class CrashMasterClass {
@@ -28,7 +24,7 @@ public class CrashMasterClass {
     private Consumer<CrashGame> onGameStart;
     private Consumer<Double> onCrash;
     private Consumer<Double> onMultiplierUpdate;
-    private Consumer<CrashPlayer> onPlayerCashout;
+    private Consumer<PlayerData> onPlayerCashout;
 
     private enum GamePhase {
         WAITING, COUNTDOWN, RUNNING
@@ -92,7 +88,7 @@ public class CrashMasterClass {
                         break;
 
                     case RUNNING:
-                        if (getCurrentGame().hasCrashed()) {
+                        if (getCurrentGame().getStatus().equals("Crashed")) {
                             currentGame = new CrashGame();
                             setupGameCallbacks();
                             currentPhase = GamePhase.WAITING;
@@ -131,7 +127,7 @@ public class CrashMasterClass {
         }
     }
 
-    public boolean addPlayerToBet(CrashPlayer player) {
+    public boolean addPlayerToBet(PlayerData player) {
         if (currentPhase == GamePhase.RUNNING) {
             return false;
         }
@@ -139,7 +135,7 @@ public class CrashMasterClass {
         return currentGame.addPlayer(player);
     }
 
-    public double cashoutPlayer(CrashPlayer player) {
+    public double cashoutPlayer(PlayerData player) {
         return currentGame.cashout(player);
     }
 
@@ -167,7 +163,7 @@ public class CrashMasterClass {
         return this;
     }
 
-    public CrashMasterClass onPlayerCashout(Consumer<CrashPlayer> callback) {
+    public CrashMasterClass onPlayerCashout(Consumer<PlayerData> callback) {
         this.onPlayerCashout = callback;
         return this;
     }
@@ -177,7 +173,7 @@ public class CrashMasterClass {
             schedulerTask.cancel();
         }
 
-        if (currentGame != null && currentGame.isRunning()) {
+        if (currentGame != null && currentGame.getStatus().equals("Running")) {
             currentGame.endGame();
         }
     }

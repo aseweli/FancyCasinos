@@ -170,7 +170,7 @@ public class CrashGUI {
         playerBets.clear();
     }
 
-    private void showPlayerCashout(CrashPlayer player) {
+    private void showPlayerCashout(PlayerData player) {
         Player bukkitPlayer = player.getPlayer();
         if (bukkitPlayer == null) return;
 
@@ -215,8 +215,8 @@ public class CrashGUI {
                             return;
                         }
 
-                        CrashPlayer crashPlayer = new CrashPlayer(player, amount);
-                        if (crashManager.addPlayerToBet(crashPlayer)) {
+                        PlayerData playerData = new PlayerData(player, amount);
+                        if (crashManager.addPlayerToBet(playerData)) {
                             MoneyUtil.getInstance().withdraw(player, amount);
                             playerBets.put(player.getUniqueId(), amount);
 
@@ -246,17 +246,17 @@ public class CrashGUI {
             return;
         }
 
-        CrashPlayer crashPlayer = null;
-        for (Map.Entry<CrashPlayer, Double> entry : crashManager.getCurrentGame().getPlayers().entrySet()) {
+        PlayerData playerData = null;
+        for (Map.Entry<PlayerData, Double> entry : crashManager.getCurrentGame().getPlayers().entrySet()) {
             if (entry.getKey().getPlayer().getUniqueId().equals(player.getUniqueId()) &&
                     entry.getValue() < 0) {
-                crashPlayer = entry.getKey();
+                playerData = entry.getKey();
                 break;
             }
         }
 
-        if (crashPlayer != null) {
-            crashManager.cashoutPlayer(crashPlayer);
+        if (playerData != null) {
+            crashManager.cashoutPlayer(playerData);
         }
     }
 
