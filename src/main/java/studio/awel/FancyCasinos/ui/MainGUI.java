@@ -13,6 +13,7 @@ import studio.awel.FancyCasinos.blackjack.BlackjackGUI;
 import studio.awel.FancyCasinos.config.ConfigManager;
 import studio.awel.FancyCasinos.crash.CrashGUI;
 import studio.awel.FancyCasinos.mines.MinesGUI;
+//import studio.awel.FancyCasinos.slots.SlotGUI;
 import studio.awel.FancyCasinos.utilities.MoneyUtil;
 import studio.awel.FancyCasinos.utilities.ColorFormater;
 import studio.awel.FancyCasinos.utilities.CustomItem;
@@ -106,6 +107,14 @@ public class MainGUI {
             case 'x':
                 player.closeInventory();
                 break;
+//            case 's':
+//                if (player.hasPermission("fancycasinos.slots")) {
+//                    handleGameBet(player, "Slots bet", amount ->
+//                            new SlotGUI(configManager, fancyCasinos).openGUI(player, amount));
+//                } else {
+//                    player.sendMessage(ColorFormater.c(configManager.getConfig().permissionDeniedMessage()));
+//                }
+//                break;
             case 'c':
                 if (player.hasPermission("fancycasinos.crash")) {
                     new CrashGUI(fancyCasinos, configManager).openGUI(player);

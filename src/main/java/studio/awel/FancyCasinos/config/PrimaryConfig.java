@@ -703,6 +703,11 @@ public interface PrimaryConfig {
     @ConfDefault.DefaultString("&6&lSlot Machine")
     String slotsTitle();
 
+    @ConfKey("slots.instructions.item")
+    @AnnotationBasedSorter.Order(201)
+    @ConfDefault.DefaultString("KNOWLEDGE_BOOK")
+    Material slotsIntructionsItem();
+
     @ConfKey("slots.instructions.title")
     @AnnotationBasedSorter.Order(201)
     @ConfDefault.DefaultString("&e&lHow To Play")
@@ -763,14 +768,19 @@ public interface PrimaryConfig {
     @ConfDefault.DefaultString("&c&lEXIT")
     String slotsExitTitle();
 
+    @ConfKey("slots.buttons.spin-item")
+    @AnnotationBasedSorter.Order(213)
+    @ConfDefault.DefaultString("BLAZE_ROD")
+    Material slotsSpinItem();
+
     @ConfKey("slots.buttons.spin")
     @AnnotationBasedSorter.Order(213)
     @ConfDefault.DefaultString("&a&lSPIN")
     String slotsSpinTitle();
 
-    @ConfKey("slots.buttons.spin.lore")
+    @ConfKey("slots.buttons.spin-lore")
     @AnnotationBasedSorter.Order(214)
-    @ConfDefault.DefaultString("</nl>&8&l| &aClick here to pay for a spin</nl>&8&l| &aYou are betting &a&n$0&a.")
+    @ConfDefault.DefaultString("&8&l| &aClick here to pay for a spin</nl>&8&l| &aYou are betting &a&n$0&a.")
     String slotsSpinLore();
 
     @ConfKey("slots.messages.bet-cancel")
