@@ -130,4 +130,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
-Made with ❤️ by [AwelPy](https://github.com/awelpy)
+Made with hate by [AwelPy](https://github.com/awelpy)
